@@ -15,6 +15,7 @@
 			href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css"
 			rel="stylesheet"
 		/>
+		<!-- Add modal CSS -->
 	</head>
 	<body>
 		<!-- header -->
@@ -128,6 +129,13 @@
 			<p>&#169; WebWar All rights reserved</p>
 		</div>
 
+		<div id="modal-container" class="modal">
+			<div class="modal-content">
+				<span class="close">&times;</span>
+				<video id="modal-video" controls></video>
+			</div>
+		</div>
+
 		<!-- link swiper js -->
 		<script src="js/swiper-bundle.min.js"></script>
 		<!-- link js -->
@@ -138,38 +146,47 @@
 				fetch("http://localhost:8000/movies")
 					.then((response) => response.json())
 					.then((data) => {
-						const popularMoviesContainer = document.getElementById("popular-movies");
-						data.movies.forEach((movie) => { 
+						const popularMoviesContainer =
+							document.getElementById("popular-movies");
+						data.movies.forEach((movie) => {
 							popularMoviesContainer.innerHTML += `
-                            <div class="swiper-slide">
-                                <div class="movie-box">
-                                    <img src="${movie.image}" alt="" class="movie-box-img">
-                                    <div class="box-text">
-                                        <h2 class="movie-title">${movie.title}</h2>
-                                        <span class="movie-type">${movie.genre}</span>
-                                        <a href="#" class="watch-btn play-btn">
-                                            <i class='bx bx-right-arrow'></i>
-                                        </a>
+                                <div class="swiper-slide">
+                                    <div class="movie-box">
+                                        <img src="${movie.image}" alt="" class="movie-box-img">
+                                        <div class="box-text">
+                                            <h2 class="movie-title">${movie.title}</h2>
+                                            <span class="movie-type">${movie.genre}</span>
+                                            <a class="watch-btn play-btn" data-video-url="${movie.videoUrl}">
+                                                <i class='bx bx-right-arrow'></i>
+                                            </a>
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
-                        `;
+                            `;
 						});
 
-						const allMoviesContainer = document.getElementById("all-movies");
-						data.allMovies.forEach((movie) => {
-							allMoviesContainer.innerHTML += `
-                            <div class="movie-box">
-                                <img src="${movie.image}" alt="" class="movie-box-img">
-                                <div class="box-text">
-                                    <h2 class="movie-title">${movie.title}</h2>
-                                    <span class="movie-type">${movie.genre}</span>
-                                    <a href="#" class="watch-btn play-btn">
-                                        <i class='bx bx-right-arrow'></i>
-                                    </a>
-                                </div>
-                            </div>
-                        `;
+						const playButtons = document.querySelectorAll(".play-btn");
+						    playButtons.forEach(button => {
+							button.addEventListener("click", event => {
+								event.preventDefault();
+								console.log("Play button clicked");
+
+								const videoUrl = button.dataset.videoUrl;
+								console.log(videoUrl);
+
+								const video = document.getElementById("modal-video");
+								video.src = videoUrl;
+								video.controls = true;
+
+								const modalContent = document.querySelector(".modal-content");
+								modalContent.innerHTML = "";
+								modalContent.appendChild(video);
+
+								const modal = document.getElementById("modal-container");
+								modal.style.display = "flex";
+
+								video.play();
+							});
 						});
 					})
 					.catch((error) =>
