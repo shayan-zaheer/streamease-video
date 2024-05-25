@@ -145,49 +145,54 @@
 			window.addEventListener("DOMContentLoaded", (event) => {
 				fetch("http://localhost:8000/movies")
 					.then((response) => response.json())
-					.then((data) => {
+					.then(data => {
 						const popularMoviesContainer =
 							document.getElementById("popular-movies");
 						data.movies.forEach((movie) => {
 							popularMoviesContainer.innerHTML += `
-                                <div class="swiper-slide">
-                                    <div class="movie-box">
-                                        <img src="${movie.image}" alt="" class="movie-box-img">
-                                        <div class="box-text">
-                                            <h2 class="movie-title">${movie.title}</h2>
-                                            <span class="movie-type">${movie.genre}</span>
-                                            <a class="watch-btn play-btn" data-video-url="${movie.videoUrl}">
-                                                <i class='bx bx-right-arrow'></i>
-                                            </a>
-                                        </div>
-                                    </div>
-                                </div>
+                            <div class="swiper-slide">
+                        <div class="movie-box">
+                            <img src="${movie.v_poster}" alt="" class="movie-box-img">
+                            <div class="box-text">
+                                <h2 class="movie-title">${movie.title}</h2>
+                                <span class="movie-type">${movie.genre}</span>
+                                <a href="play-page.html?id=${movie.id}" class="watch-btn play-btn" data-id="${movie.id}">
+                                    <i class='bx bx-right-arrow'></i>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
                             `;
 						});
 
-						const playButtons = document.querySelectorAll(".play-btn");
-						    playButtons.forEach(button => {
-							button.addEventListener("click", event => {
-								event.preventDefault();
-								console.log("Play button clicked");
+						// const playButtons =
+						// 	document.querySelectorAll(".play-btn");
+						// playButtons.forEach((button) => {
+						// 	button.addEventListener("click", (event) => {
+						// 		console.log(event);
+						// 		event.preventDefault();
+						// 		console.log("Play button clicked");
 
-								const videoUrl = button.dataset.videoUrl;
-								console.log(videoUrl);
+						// 		const videoUrl = button.dataset.videoUrl;
+						// 		console.log(videoUrl);
 
-								const video = document.getElementById("modal-video");
-								video.src = videoUrl;
-								video.controls = true;
+						// 		const video =
+						// 			document.getElementById("modal-video");
+						// 		video.src = videoUrl;
+						// 		video.controls = true;
 
-								const modalContent = document.querySelector(".modal-content");
-								modalContent.innerHTML = "";
-								modalContent.appendChild(video);
+						// 		const modalContent =
+						// 			document.querySelector(".modal-content");
+						// 		modalContent.innerHTML = "";
+						// 		modalContent.appendChild(video);
 
-								const modal = document.getElementById("modal-container");
-								modal.style.display = "flex";
+						// 		const modal =
+						// 			document.getElementById("modal-container");
+						// 		modal.style.display = "flex";
 
-								video.play();
-							});
-						});
+						// 		video.play();
+						// 	});
+						// });
 					})
 					.catch((error) =>
 						console.error("Error fetching movies:", error)
