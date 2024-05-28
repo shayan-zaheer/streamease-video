@@ -59,7 +59,7 @@ exports.getMovieByID = async (request, response) => {
 			});
 		}
 
-		const movieTitle = results[0].title.replace(/\s+/g, "").toLowerCase() + ".mp4";
+		const movieTitle = results[0].title.replace(/\s+/g, "").toLowerCase() + ".mkv";
 		const containerClient = blobServiceClient.getContainerClient(containerName);
 		const blobClient = containerClient.getBlobClient(movieTitle);
 
@@ -94,3 +94,29 @@ exports.getMovieByID = async (request, response) => {
 		});
 	}
 };
+
+exports.searchMovie = async (request, response) => {
+    try{
+        const movie = request.params.query;
+        const SQL = "SELECT * FROM MOVIES WHERE TITLE LIKE ?";
+        const results = await executeQuery(SQL, [movie]);
+
+        if (results.length === 0) {
+			return response.status(404).json({
+				status: "fail",
+				message: "Movie not found!",
+			});
+		}
+        
+        response.status(200).json({
+            status: "success",
+            movies: results
+        })
+    }
+    catch(err){
+        response.status(500).json({
+            status: "fail",
+            message: err.message
+        })
+    }
+}

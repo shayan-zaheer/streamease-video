@@ -70,16 +70,16 @@
 		</div>
 
 		<!-- About -->
-		<div class="about-movie container">
-
-        </div>
+		<div class="about-movie container"></div>
 
 		<!-- copyright -->
 		<footer class="copyright">
-            <div>
-                <a href="#" id="linkedin-link"><i class='bx bxl-linkedin'></i></a>
-            </div>
-        </footer>
+			<div>
+				<a href="#" id="linkedin-link"
+					><i class="bx bxl-linkedin"></i
+				></a>
+			</div>
+		</footer>
 
 		<!-- link swiper js -->
 		<script src="js/swiper-bundle.min.js"></script>
@@ -91,7 +91,7 @@
 				const urlParams = new URLSearchParams(window.location.search);
 				const movieId = urlParams.get("id");
 
-				if(movieId){
+				if (movieId) {
 					fetch(`http://localhost:8000/movies/${movieId}`)
 						.then((response) => response.json())
 						.then((data) => {
@@ -105,11 +105,7 @@
             <h2>${data.movie.title}</h2>
             <!-- ratings -->
             <div class="raiting">
-                <i class='bx bxs-star'></i>
-                <i class='bx bxs-star'></i>
-                <i class='bx bxs-star'></i>
-                <i class='bx bxs-star'></i>
-                <i class='bx bxs-star-half'></i>
+                <i class='bx bxs-star'></i> ${data.movie.vote_average}
             </div>
             <!-- tags -->
             <div class="tags">
@@ -128,58 +124,80 @@
         <div class="video-container">
             <!-- video box -->
             <div class="video-box">
-                <video id="myvideo" src=${data.movie.url} autoplay controls></video>
+                <video id="myvideo" src=${data.movie.url} controls controlsList="nodownload"></video>
                 <!-- close video icon -->
-                <i class='bx bx-x close-video' ></i>
+                <i class='bx bx-x close-video'></i>
             </div>
         </div>`;
 
-		const aboutMovie = document.querySelector(".about-movie");
-		aboutMovie.innerHTML = `
+							const aboutMovie =
+								document.querySelector(".about-movie");
+							aboutMovie.innerHTML = `
         <h2>${data.movie.title}</h2>
         <p>${data.movie.description}</p>
         <!-- data.movie cast -->
         <h2 class="cast-heading">${data.movie.title}'s Cast</h2>
-        <div class="cast">
-            <div class="cast-box">
-                <img alt="" class="cast-img">
-                <span class="cast-title">Dwayne Johnson</span>
-            </div>
-            <div class="cast-box">
-                <img alt="" class="cast-img">
-                <span class="cast-title">Karen Gillan</span>
-            </div>
-            <div class="cast-box">
-                <img alt="" class="cast-img">
-                <span class="cast-title">Kevin Hart</span>
-            </div>
-            <div class="cast-box">
-                <img alt="" class="cast-img">
-                <span class="cast-title">Nick Jonas</span>
-            </div>
-            <div class="cast-box">
-                <img alt="" class="cast-img">
-                <span class="cast-title">Alex Wolff</span>
-            </div>
-            <div class="cast-box">
-                <img alt="" class="cast-img">
-                <span class="cast-title">Madison Iseman</span>
-            </div>  
+        <div id="cast">
+            
         </div>
         `;
-			
-        const playButton = document.querySelector('.play-movie');
-                        const videoContainer = document.querySelector('.video-container');
-                        const closeVideoButton = document.querySelector('.close-video');
 
-                        playButton.addEventListener('click', () => {
-                            videoContainer.style.display = "flex";
-                        });
+        const apiKey = "bf0036eb9e46fbfcccfb653c83bc63cd";
+			const movieName = data.movie.title;
 
-                        closeVideoButton.addEventListener('click', () => {
-                            videoContainer.style.display = "none";
-                        });
-    })
+			const searchMovie = async (movieName) => {
+				const searchUrl = `https://api.themoviedb.org/3/search/movie?api_key=${apiKey}&query=${encodeURIComponent(
+					movieName
+				)}`;
+				const response = await fetch(searchUrl);
+				const searchResults = await response.json();
+				if (searchResults.results && searchResults.results.length > 0) {
+					return searchResults.results[0].id;
+				} else {
+					throw new Error("Movie not found");
+				}
+			};
+
+			const getMovieCredits = async (movieId) => {
+				const creditsUrl = `https://api.themoviedb.org/3/movie/${movieId}/credits?api_key=${apiKey}`;
+				const response = await fetch(creditsUrl);
+				const credits = await response.json();
+				return credits.cast;
+			};
+
+			const fetchMovieCast = async (movieName) => {
+				const movieId = await searchMovie(movieName);
+				const cast = await getMovieCredits(movieId);
+				const castBox = document.getElementById("cast");
+				cast.forEach((member) => {
+					castBox.innerHTML += `
+            <div class="cast-box">
+                <img src="https://image.tmdb.org/t/p/original${member.profile_path}" class="cast-img">
+                <span class="cast-title">${member.original_name}</span>
+            </div>
+            `;
+				});
+			};
+
+			fetchMovieCast(movieName);
+
+							const playButton =
+								document.querySelector(".play-movie");
+							const videoContainer =
+								document.querySelector(".video-container");
+							const closeVideoButton =
+								document.querySelector(".close-video");
+							const video = document.querySelector("#myvideo");
+
+							playButton.addEventListener("click", () => {
+								videoContainer.style.display = "flex";
+							});
+
+							closeVideoButton.addEventListener("click", () => {
+								video.pause();
+								videoContainer.style.display = "none";
+							});
+						})
 						.catch((error) =>
 							console.error(
 								"Error fetching data.movie details:",
@@ -189,7 +207,10 @@
 				} else {
 					console.error("No data.movie ID found in URL");
 				}
+
+
 			});
 		</script>
+
 	</body>
 </html>

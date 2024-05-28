@@ -201,6 +201,37 @@
 			});
 		</script>
 
+        <script>
+            const inputMovie = document.getElementById("search-input");
+            inputMovie.addEventListener("keypress", event => {
+                event.preventDefault();
+                if(event.key === "Enter"){
+                    const query = inputMovie.value;
+                    fetch(`https://localhost:8000/movies/${query}`)
+                    .then(response => response.json())
+                    .then(data => {
+                        const moviesContent = document.getElementById("all-movies");
+                        data.movies.forEach(movie => {
+                            moviesContent.innerHTML += `
+                            <div class="swiper-slide">
+                        <div class="movie-box">
+                            <img src="${movie.v_poster}" alt="" class="movie-box-img">
+                            <div class="box-text">
+                                <h2 class="movie-title">${movie.title}</h2>
+                                <span class="movie-type">${movie.genre}</span>
+                                <a href="play-page.html?id=${movie.id}" class="watch-btn play-btn" data-id="${movie.id}">
+                                    <i class='bx bx-right-arrow'></i>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                            `
+                        })
+                    })
+                }
+            })
+        </script>
+
 		<script>
 			const modal = document.getElementById("linkedin-modal");
 			const closeBtn = document.getElementsByClassName("close")[0];

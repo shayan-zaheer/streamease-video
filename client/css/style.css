@@ -599,7 +599,7 @@ footer a#linkedin-link:hover {
     color: var(--main-color);
 }
 
-.cast{
+#cast{
     display: grid;
     grid-template-columns: repeat(auto-fit,minmax(150px,150px));
     gap: 1rem;
