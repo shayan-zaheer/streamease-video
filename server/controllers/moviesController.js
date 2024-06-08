@@ -21,8 +21,26 @@ const blobServiceClient = new BlobServiceClient(
 );
 
 exports.getAllMovies = async (request, response) => {
+    try{
+        const SQL = 'SELECT * FROM MOVIES WHERE SECTION = "General"';
+        const results = await executeQuery(SQL);
+
+        response.status(200).json({
+            status: "success",
+            movies: results,
+        });
+    }
+    catch(err){
+        response.status(400).json({
+            status: "fail",
+            message: err.message
+        });
+    }
+};
+
+exports.getPopularMovies = async (request, response) => {
 	try{
-		const SQL = "SELECT * FROM MOVIES";
+		const SQL = 'SELECT * FROM MOVIES WHERE SECTION = "Popular"';
 		const results = await executeQuery(SQL);
 
 		response.status(200).json({
@@ -64,7 +82,7 @@ exports.getMovieByID = async (request, response) => {
 		const blobClient = containerClient.getBlobClient(movieTitle);
 
 		const expiryDate = new Date();
-		expiryDate.setMinutes(expiryDate.getMinutes() + 60);
+		expiryDate.setMinutes(expiryDate.getMinutes() + 200);
 
 		const sasToken = generateBlobSASQueryParameters(
 			{

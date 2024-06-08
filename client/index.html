@@ -173,9 +173,9 @@
 
 		<script>
 			window.addEventListener("DOMContentLoaded", (event) => {
-				fetch("http://localhost:8000/movies")
+				fetch("http://localhost:8000/movies/popular/")
 					.then((response) => response.json())
-					.then((data) => {
+					.then((data) => { 
 						const popularMoviesContainer =
 							document.getElementById("popular-movies");
 						data.movies.forEach((movie) => {
@@ -198,7 +198,29 @@
 					.catch((error) =>
 						console.error("Error fetching movies:", error)
 					);
-			});
+			})
+            
+            window.addEventListener("DOMContentLoaded", event => {
+                fetch("http://localhost:8000/movies/general")
+                .then(response => response.json())
+                .then(data => {
+                    const moviesContainer =
+							document.getElementById("all-movies");
+						data.movies.forEach((movie) => {
+							moviesContainer.innerHTML += `
+                        <div class="movie-box">
+                            <img src="${movie.v_poster}" alt="" class="movie-box-img">
+                            <div class="box-text">
+                                <h2 class="movie-title">${movie.title}</h2>
+                                <span class="movie-type">${movie.genre}</span>
+                                <a href="play-page.html?id=${movie.id}" class="watch-btn play-btn" data-id="${movie.id}">
+                                    <i class='bx bx-right-arrow'></i>
+                                </a>
+                            </div>
+                        </div>`
+                })
+            })  
+        });
 		</script>
 
         <script>
