@@ -70,7 +70,7 @@ exports.getMovieByID = async (request, response) => {
 		const SQL = "SELECT * FROM MOVIES WHERE ID = ?";
 		const results = await executeQuery(SQL, [id]);
 
-		if (results.length === 0) {
+		if(results.length === 0) {
 			return response.status(404).json({
 				status: "fail",
 				message: "Movie not found!",
