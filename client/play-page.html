@@ -86,14 +86,24 @@
 
 		<!-- link js -->
 		<script src="js/main.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+        <script>
+            const token = localStorage.getItem('token');
+            if(token){
+                axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+            }
+            else{
+                window.location.href = "login-signup.html";
+            }
+        </script>
 		<script>
 			document.addEventListener("DOMContentLoaded", (event) => {
 				const urlParams = new URLSearchParams(window.location.search);
 				const movieId = urlParams.get("id");
 
 				if (movieId) {
-					fetch(`http://localhost:8000/movies/${movieId}`)
-						.then((response) => response.json())
+					axios.get(`http://localhost:8000/movies/${movieId}`)
+						.then((response) => response.data)
 						.then((data) => {
 							console.log(data.movie);
 							const movieDetails =
@@ -135,7 +145,7 @@
 							aboutMovie.innerHTML = `
         <h2>${data.movie.title}</h2>
         <p>${data.movie.description}</p>
-        <!-- data.movie cast -->
+        <!-- Movie cast -->
         <h2 class="cast-heading">${data.movie.title}'s Cast</h2>
         <div id="cast">
             
@@ -200,12 +210,12 @@
 						})
 						.catch((error) =>
 							console.error(
-								"Error fetching data.movie details:",
+								"Error fetching movie details:",
 								error
 							)
 						);
 				} else {
-					console.error("No data.movie ID found in URL");
+					console.error("No movie ID found in URL");
 				}
 
 

@@ -6,10 +6,12 @@ const moviesRoutes = require("./routes/moviesRoutes");
 const authRoutes = require("./routes/authRoutes");
 const morgan = require("morgan");
 const bodyParser = require("body-parser");
+const cookieParser = require("cookie-parser");
 
 app.use(cors());
 app.use(morgan("dev"));
 app.use(bodyParser.json());
+app.use(cookieParser());
 app.use("/movies", moviesRoutes);
 app.use("/auth", authRoutes);
 

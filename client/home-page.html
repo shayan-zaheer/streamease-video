@@ -170,11 +170,21 @@
 		<script src="js/swiper-bundle.min.js"></script>
 		<!-- link js -->
 		<script src="js/main.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+        <script>
+            const token = localStorage.getItem('token');
+            if(token){
+                axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+            }
+            else{
+                window.location.href = "login-signup.html";
+            }
+        </script>
 
 		<script>
 			window.addEventListener("DOMContentLoaded", (event) => {
-				fetch("http://localhost:8000/movies/popular/")
-					.then((response) => response.json())
+				axios.get("http://localhost:8000/movies/popular/")
+					.then((response) => response.data)
 					.then((data) => { 
 						const popularMoviesContainer =
 							document.getElementById("popular-movies");
@@ -201,8 +211,8 @@
 			})
             
             window.addEventListener("DOMContentLoaded", event => {
-                fetch("http://localhost:8000/movies/general")
-                .then(response => response.json())
+                axios.get("http://localhost:8000/movies/general")
+                .then(response => response.data)
                 .then(data => {
                     const moviesContainer =
 							document.getElementById("all-movies");
@@ -222,37 +232,6 @@
             })  
         });
 		</script>
-
-        <script>
-            const inputMovie = document.getElementById("search-input");
-            inputMovie.addEventListener("keypress", event => {
-                event.preventDefault();
-                if(event.key === "Enter"){
-                    const query = inputMovie.value;
-                    fetch(`https://localhost:8000/movies/${query}`)
-                    .then(response => response.json())
-                    .then(data => {
-                        const moviesContent = document.getElementById("all-movies");
-                        data.movies.forEach(movie => {
-                            moviesContent.innerHTML += `
-                            <div class="swiper-slide">
-                        <div class="movie-box">
-                            <img src="${movie.v_poster}" alt="" class="movie-box-img">
-                            <div class="box-text">
-                                <h2 class="movie-title">${movie.title}</h2>
-                                <span class="movie-type">${movie.genre}</span>
-                                <a href="play-page.html?id=${movie.id}" class="watch-btn play-btn" data-id="${movie.id}">
-                                    <i class='bx bx-right-arrow'></i>
-                                </a>
-                            </div>
-                        </div>
-                    </div>
-                            `
-                        })
-                    })
-                }
-            })
-        </script>
 
 		<script>
 			const modal = document.getElementById("linkedin-modal");

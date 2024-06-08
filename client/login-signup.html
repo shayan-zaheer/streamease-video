@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>StreamEase</title>
+    <!-- favicon -->
+    <link rel="shortcut icon" href="favicon.png" type="image/x-icon">
+    <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+    <!-- header -->
+    <header>
+
+        <div class="nav container">
+
+        <!-- logo -->
+        <a href="index.html" class="logo">Stream<span>Ease</span></a>
+
+        <button class="btn btn-red-sm">Login</button>
+
+        <!-- user -->
+        <a href="#" class="user">
+            <img src="images/user.jpg" alt="" class="user-img">
+        </a>
+        </div>
+    </header>    
+    <div class="main">
+        
+        <div class="box">
+        <div class="hero">
+            <span class="icon-close"><ion-icon name="close-outline"></ion-icon></span>
+            <div class="form-box login">
+                <h2>Login</h2>
+                <form action="#" id="loginForm" method="POST" enctype="multipart/form-data">
+                    <div class="input-box">
+                        <span class="icon"><ion-icon name="mail"></ion-icon></span>
+                        <input id="eInput" name="email" type="email" required>
+                        <label for="email">Email</label>
+                    </div>
+                    <div class="input-box">
+                        <span class="icon"><ion-icon name="lock-closed"></ion-icon></span>
+                        <input id="pInput" name="pass" type="password" required>
+                        <label for="pass">Password</label>
+                    </div>
+                    <div class="remember-forget">
+                        <label>
+                            <input type="checkbox">Remember me
+                        </label>
+                        <a href="#">Forget Password?</a>
+                    </div>
+                    <button type="submit" class="boto">Login</button>
+                    <div class="login-register">
+                        <p>Don't have an account? <a href="#" class="register-link">Register</a></p>
+                    </div>
+                </form>
+            </div>
+            <div class="form-box register">
+                <h2>Registration</h2>
+                <form action="#" id="signupForm"  method="POST">
+                    <div class="input-box">
+                        <span class="icon"><ion-icon name="person"></ion-icon></span>
+                        <input id="usernameInput" name="username" type="text" required>
+                        <label for="username">Username</label>
+                    </div>
+                    <div class="input-box">
+                        <span class="icon"><ion-icon name="mail"></ion-icon></span>
+                        <input id="emailInput" name="email" type="email" required>
+                        <label for="email">Email</label>
+                    </div>
+                    <div class="input-box">
+                        <span class="icon"><ion-icon name="lock-closed"></ion-icon></span>
+                        <input id="pwInput" name="pass" type="password" required>
+                        <label for="pass">Password</label>
+                    </div>
+                    <div class="remember-forget">
+                        <label>
+                            <input type="checkbox">I agree to the terms and conditions
+                        </label>
+                    </div>
+                    <button type="submit" class="boto">Register</button>
+                    <div class="login-register">
+                        <p>Already have an account? <a href="#" class="login-link">Login</a></p>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    </div>
+    <div class="seperation"></div>
+
+    <section class="first">
+        <div class="secimg">
+            <img src="images/mobile.png" alt="">
+        </div>
+        <div>
+            <span>Download your shows to watch offline</span>
+            <span>Save your favorites easily and always have something to watch.</span>
+        </div>
+
+    </section>
+    <div class="seperation"></div>
+
+    <section class="first second">
+        <div>
+            <span>Watch everywhere</span>
+            <span>Stream unlimited movies and TV shows on your phone, tablet, laptop, and TV.</span>
+        </div>
+        <div class="secimg">
+            <img src="images/tv.png" alt="">
+            <video src="videos/video1.mp4" autoplay loop muted></video>
+        </div>
+    </section>
+    <div class="seperation"></div>
+     <!-- copyright -->
+     <div class="copyright">
+        <p>&#169; WebWar All rights reserved</p>
+    </div>
+
+    <script src="script.js"></script>
+    <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
+    <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+
+    <script>
+        const loginForm = document.getElementById("loginForm");
+        const signupform = document.getElementById("signupForm");
+        signupform.addEventListener("submit", event => {
+            event.preventDefault();
+            const username = document.getElementById("usernameInput").value;
+            const email = document.getElementById("emailInput").value;
+            const password = document.getElementById("pwInput").value;
+
+        axios.post("http://localhost:8000/auth/signup", {username, email, password})
+        .then(response => console.log(response.data))
+        .catch(err => console.log(err));
+        })
+        
+        loginForm.addEventListener("submit", event => {
+            event.preventDefault();
+            const email = document.getElementById("eInput").value;
+            const password = document.getElementById("pInput").value;
+
+            axios.post("http://localhost:8000/auth/login", {email, password})
+            .then(response => {
+                if(response.data.status === "success" && response.data.token){
+                    localStorage.setItem('token', response.data.token);
+                    window.location.href = "home-page.html";
+                }
+            })
+            .catch(err => console.log(err));
+        })
+
+        ;
+    </script>
+    
+</body>
+
+</html>
