@@ -40,15 +40,15 @@
 
 				<!-- nav-bar -->
 				<div class="navbar">
-					<a href="index.html" class="nav-link nav-active">
+					<a href="home-page.html" class="nav-link nav-active">
 						<i class="bx bx-home"></i>
 						<span class="nav-link-title">Home</span>
 					</a>
-					<a href="#home" class="nav-link">
+					<a href="home-page.html#popular" class="nav-link">
 						<i class="bx bxs-hot"></i>
 						<span class="nav-link-title">Trending</span>
 					</a>
-					<a href="#home" class="nav-link">
+					<a href="home-page.html#movies" class="nav-link">
 						<i class="bx bx-compass"></i>
 						<span class="nav-link-title">Explore</span>
 					</a>
@@ -88,14 +88,16 @@
 		<script src="js/main.js"></script>
         <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
         <script>
-            const token = localStorage.getItem('token');
-            if(token){
-                axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
-            }
-            else{
-                window.location.href = "login-signup.html";
-            }
+            // const token = localStorage.getItem('token');
+            // if(token){
+            //     axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+            // }
+            // else{
+            //     window.location.href = "login-signup.html";
+            // }
+
         </script>
+
 		<script>
 			document.addEventListener("DOMContentLoaded", (event) => {
 				const urlParams = new URLSearchParams(window.location.search);
@@ -120,12 +122,7 @@
             <!-- tags -->
             <div class="tags">
                 <span>${data.movie.genre}</span>
-            </div>
-            <!-- trailer button -->
-            <a href="#" class="watch-btn">
-                <i class='bx bx-right-arrow'></i>
-                <span>Watch the trailer</span>
-            </a>
+            </div>  
         </div>
         <!-- play btn -->
         <i class='bx bx-right-arrow play-movie'></i>

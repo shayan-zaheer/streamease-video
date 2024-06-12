@@ -53,9 +53,15 @@ exports.login = async (request, response) => {
 
         const token = signToken(result[0].email);
 
+        response.cookie('token', token, { 
+            httpOnly: true, 
+            maxAge: 7 * 24 * 60 * 60 * 1000,
+            sameSite: "None",
+            secure: true
+        });
+
         response.status(200).json({
-            status: "success",
-            token: token
+            status: "success"
         });
 
     } catch (err) {
@@ -68,42 +74,43 @@ exports.login = async (request, response) => {
 
 exports.checkToken = async (request, response, next) => {
     try {
-        const testToken = request.headers.authorization;
-        let token;
-        if(testToken && testToken.startsWith("Bearer")){
-            token = testToken.split(" ")[1];
-        }
-
+        const token = request.cookies.token;
+        console.log(request.cookies);
+        
         if (!token) {
             return response.status(401).json({
                 status: "fail",
                 message: "You are not logged in!"
             });
         }
-
-        // 2. verify/validate the token
-        const decodedToken = await util.promisify(jwt.verify)(token, process.env.SECRET_STR);
-        console.log(decodedToken);
-
-        // 3. Check if the user exists
-        const SQL = "SELECT * FROM USERS WHERE EMAIL = ?";
-        const result = await executeQuery(SQL, [decodedToken.email]);
-
-        if (!result) {
-            return response.status(401).json({
-                status: "fail",
-                message: "The user with the given token does not exist!"
-            });
-        }
-
-        // If everything is successful, user is authenticated
-        // Proceed to the next middleware or handle the request
-        next(); // Call next() to pass control to the next middleware
-    } catch (err) {
-        console.error(err);
+                
+                // 2. verify/validate the token
+                const decodedToken = await util.promisify(jwt.verify)(token, process.env.SECRET_STR);
+                console.log(decodedToken);
+                
+                // 3. Check if the user exists
+                const SQL = "SELECT * FROM USERS WHERE EMAIL = ?";
+                const result = await executeQuery(SQL, [decodedToken.email]);
+                
+                if (!result) {
+                    return response.status(401).json({
+                        status: "fail",
+                        message: "The user with the given token does not exist!"
+                        });
+                        }
+                    
+                        next();
+                        } catch (err) {
+                            console.error(err);
         return response.status(500).json({
             status: "error",
             message: "Internal Server Error"
-        });
-    }
-};
+            });
+            }
+            };
+            
+            // const testToken = request.headers.authorization;
+            // let token;
+            // if(testToken && testToken.startsWith("Bearer")){
+            //     token = testToken.split(" ")[1];
+            // }

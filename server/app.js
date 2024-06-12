@@ -5,12 +5,18 @@ const app = express();
 const moviesRoutes = require("./routes/moviesRoutes");
 const authRoutes = require("./routes/authRoutes");
 const morgan = require("morgan");
-const bodyParser = require("body-parser");
 const cookieParser = require("cookie-parser");
+const path = require("path");
 
-app.use(cors());
+app.use(cors({
+    origin: 'http://127.0.0.1:5500',
+    credentials: true
+}));
+
+// app.use(express.static(path.join(__dirname, '../client')));
+
 app.use(morgan("dev"));
-app.use(bodyParser.json());
+app.use(express.json());
 app.use(cookieParser());
 app.use("/movies", moviesRoutes);
 app.use("/auth", authRoutes);

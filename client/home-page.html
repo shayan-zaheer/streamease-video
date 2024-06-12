@@ -31,6 +31,7 @@
 						name=""
 						id="search-input"
 						placeholder="Search movie"
+                        onkeyup="sendData(this)"
 					/>
 					<i class="bx bx-search"></i>
 				</div>
@@ -172,24 +173,28 @@
 		<script src="js/main.js"></script>
         <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
         <script>
-            const token = localStorage.getItem('token');
-            if(token){
-                axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
-            }
-            else{
-                window.location.href = "login-signup.html";
+            // const token = localStorage.getItem('token');
+            // if(token){
+            //     axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+            // }
+            // else{
+            //     window.location.href = "login-signup.html";
+            // }
+        </script>
+
+        <script>
+            async function sendData(e){
+                await axios.post("http://localhost:8000/movies", {payload: e.value})
             }
         </script>
 
 		<script>
-			window.addEventListener("DOMContentLoaded", (event) => {
-				axios.get("http://localhost:8000/movies/popular/")
-					.then((response) => response.data)
-					.then((data) => { 
-						const popularMoviesContainer =
-							document.getElementById("popular-movies");
-						data.movies.forEach((movie) => {
-							popularMoviesContainer.innerHTML += `
+			window.addEventListener("DOMContentLoaded", async(event) => {
+				const result = await axios.get("http://localhost:8000/movies/popular/", {withCredentials: true});
+                const data = result.data;
+				const popularMoviesContainer = document.getElementById("popular-movies");
+				data.movies.forEach((movie) => {
+					popularMoviesContainer.innerHTML += `
                             <div class="swiper-slide">
                         <div class="movie-box">
                             <img src="${movie.v_poster}" alt="" class="movie-box-img">
@@ -208,16 +213,13 @@
 					.catch((error) =>
 						console.error("Error fetching movies:", error)
 					);
-			})
             
-            window.addEventListener("DOMContentLoaded", event => {
-                axios.get("http://localhost:8000/movies/general")
-                .then(response => response.data)
-                .then(data => {
-                    const moviesContainer =
-							document.getElementById("all-movies");
-						data.movies.forEach((movie) => {
-							moviesContainer.innerHTML += `
+            window.addEventListener("DOMContentLoaded", async event => {
+                const result = await axios.get("http://localhost:8000/movies/general", {withCredentials: true});
+                const data = result.data;
+                const moviesContainer = document.getElementById("all-movies");
+				data.movies.forEach((movie) => {
+					moviesContainer.innerHTML += `
                         <div class="movie-box">
                             <img src="${movie.v_poster}" alt="" class="movie-box-img">
                             <div class="box-text">
@@ -229,8 +231,7 @@
                             </div>
                         </div>`
                 })
-            })  
-        });
+            });
 		</script>
 
 		<script>
