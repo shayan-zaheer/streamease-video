@@ -360,3 +360,27 @@ section.first > div :nth-child(2){
     text-decoration: underline;
 }
 
+.search-box {
+    position: relative;
+}
+
+#dropdown {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    background-color: white;
+    border: 1px solid #ccc;
+    display: none;
+    z-index: 1000;
+}
+
+.dropdown-item {
+    color: black;
+    padding: 8px 12px;
+    cursor: pointer;
+}
+
+.dropdown-item:hover {
+    background-color: #f0f0f0;
+}

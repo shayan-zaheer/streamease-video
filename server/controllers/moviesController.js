@@ -113,28 +113,27 @@ exports.getMovieByID = async (request, response) => {
 	}
 };
 
-exports.searchMovie = async (request, response) => {
+exports.searchMovies = async (request, response) => {
+    const query = request.query.q;
+    if(!query){
+        return response.status(400).json({
+            status: "fail",
+            message: "No query parameters!"
+        });
+    }
     try{
-        const movie = request.params.query;
-        const SQL = "SELECT * FROM MOVIES WHERE TITLE LIKE ?";
-        const results = await executeQuery(SQL, [movie]);
+        const SQL = "SELECT * FROM MOVIES WHERE title LIKE ?";
+        const results = await executeQuery(SQL, [`%${query}%`]);
 
-        if (results.length === 0) {
-			return response.status(404).json({
-				status: "fail",
-				message: "Movie not found!",
-			});
-		}
-        
         response.status(200).json({
             status: "success",
             movies: results
-        })
+        });
     }
     catch(err){
         response.status(500).json({
-            status: "fail",
+            status: "error",
             message: err.message
-        })
+        });
     }
 }
