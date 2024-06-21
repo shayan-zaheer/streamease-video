@@ -123,7 +123,7 @@ exports.searchMovies = async (request, response) => {
     }
     try{
         const SQL = "SELECT * FROM MOVIES WHERE title LIKE ?";
-        const results = await executeQuery(SQL, [`%${query}%`]);
+        const results = await executeQuery(SQL, [`${query}%`]);
 
         response.status(200).json({
             status: "success",

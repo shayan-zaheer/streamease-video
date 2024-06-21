@@ -79,7 +79,7 @@
 					Bodyguard
 				</h1>
 				<p>Releasing on 10th April</p>
-				<a href="#" class="watch-btn">
+				<a class="watch-btn">
 					<i class="bx bx-right-arrow"></i>
 					<span>Watch the Trailer</span>
 				</a>
@@ -207,6 +207,14 @@
 				});
 			});
 		</script>
+
+        <script>
+            document.querySelector(".watch-btn").addEventListener("click", async event => {
+                const response = await axios.post('http://localhost:8000/auth/logout', {}, {
+                withCredentials: true,
+            });
+            })
+        </script>
 
 		<!-- <script>
 			document.addEventListener("DOMContentLoaded", () => {

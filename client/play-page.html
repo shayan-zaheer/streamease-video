@@ -177,6 +177,9 @@
 				const cast = await getMovieCredits(movieId);
 				const castBox = document.getElementById("cast");
 				cast.forEach((member) => {
+                    if(member.profile_path == null){
+                        return;
+                    }
 					castBox.innerHTML += `
             <div class="cast-box">
                 <img src="https://image.tmdb.org/t/p/original${member.profile_path}" class="cast-img">

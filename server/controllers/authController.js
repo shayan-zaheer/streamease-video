@@ -138,6 +138,27 @@ exports.authenticate = async (request, response, next) => {
     }
 }
 
+exports.logout = async (request, response) => {
+    try{
+        response.clearCookie("token", {
+			httpOnly: true,
+			maxAge: 7 * 24 * 60 * 60 * 1000,
+			sameSite: "None",
+			secure: true,
+		});
+
+        response.status(200).json({
+            status: "success"
+        });
+    }
+    catch(err){
+        response.status(500).json({
+            status: "fail",
+            message: err.message
+        });
+    }
+}
+
 // const testToken = request.headers.authorization;
 // let token;
 // if(testToken && testToken.startsWith("Bearer")){
