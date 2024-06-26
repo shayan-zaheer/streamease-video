@@ -55,7 +55,16 @@ exports.login = async (request, response) => {
 			});
 		}
 
+        const user_id = result[0].user_id;
+
 		const token = signToken(result[0].email);
+
+        response.cookie("uid", user_id, {
+            httpOnly: true,
+            maxAge: 7 * 24 * 60 * 60 * 1000,
+            sameSite: "None",
+            secure: true
+        })
 
 		response.cookie("token", token, {
 			httpOnly: true,
