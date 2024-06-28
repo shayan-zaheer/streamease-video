@@ -38,7 +38,7 @@
 				</div>
 
 				<!-- user -->
-				<a href="#" class="user">
+				<a href="./profile.html" class="user">
 					<img src="img/user.jpg" alt="" class="user-img" />
 				</a>
 
@@ -208,19 +208,13 @@
 			});
 		</script>
 
-		<script>
-			document
-				.querySelector(".watch-btn")
-				.addEventListener("click", async (event) => {
-					const response = await axios.post(
-						"http://localhost:8000/auth/logout",
-						{},
-						{
-							withCredentials: true,
-						}
-					);
-				});
-		</script>
+        <script>
+            document.querySelector(".watch-btn").addEventListener("click", async event => {
+                const response = await axios.post('http://localhost:8000/auth/logout', {}, {
+                withCredentials: true,
+            });
+            })
+        </script>
 
 		<!-- <script>
 			document.addEventListener("DOMContentLoaded", () => {
@@ -273,19 +267,17 @@
 				const data = result.data;
 				const moviesContainer = document.getElementById("all-movies");
 				data.movies.forEach((movie) => {
-					moviesContainer.innerHTML += `<div class="movie-box">
-    <img src="${movie.v_poster}" alt="" class="movie-box-img">
-    <div class="box-text">
-        <h2 class="movie-title">${movie.title}</h2>
-        <span class="movie-type">${movie.genre}</span>
-        <a href="play-page.html?id=${movie.id}" class="watch-btn play-btn" data-id="${movie.id}">
-            <i class='bx bx-right-arrow'></i>
-        </a>
-        <button class="love-btn" data-id="${movie.id}">
-            <i class='bx bx-heart'></i>
-        </button>
-    </div>
-</div>`;
+					moviesContainer.innerHTML += `
+                        <div class="movie-box">
+                            <img src="${movie.v_poster}" alt="" class="movie-box-img">
+                            <div class="box-text">
+                                <h2 class="movie-title">${movie.title}</h2>
+                                <span class="movie-type">${movie.genre}</span>
+                                <a href="play-page.html?id=${movie.id}" class="watch-btn play-btn" data-id="${movie.id}">
+                                    <i class='bx bx-right-arrow'></i>
+                                    </a>
+                                    </div>
+                                    </div>`;
 				});
 			});
 
@@ -320,21 +312,9 @@
 				);
 		</script>
 
-		<script>
-			document.addEventListener("DOMContentLoaded", function () {
-				const loveButtons = document.querySelectorAll(".love-btn");
-
-				loveButtons.forEach((button) => {
-					button.addEventListener("click", function () {
-						if (button.classList.contains("active")) {
-							button.classList.remove("active");
-						} else {
-							button.classList.add("active");
-						}
-					});
-				});
-			});
-		</script>
+        <script>
+            
+        </script>
 
 		<script>
 			const modal = document.getElementById("linkedin-modal");

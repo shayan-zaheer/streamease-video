@@ -4,6 +4,7 @@ const cors = require("cors");
 const app = express();
 const moviesRoutes = require("./routes/moviesRoutes");
 const authRoutes = require("./routes/authRoutes");
+const userRoutes = require("./routes/userRoutes");
 const morgan = require("morgan");
 const cookieParser = require("cookie-parser");
 
@@ -18,6 +19,7 @@ app.use(cookieParser());
 
 app.use("/movies", moviesRoutes);
 app.use("/auth", authRoutes);
+app.use("/users", userRoutes);
 
 const PORT = process.env.PORT || 8000;
 app.listen(PORT, () => {

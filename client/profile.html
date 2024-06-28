@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>StreamEase</title>
+    <!-- link css -->
+    <link rel="stylesheet" href="css/profilestyle.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.3.0/css/all.min.css">
+    <!-- favicon -->
+    <link rel="shortcut icon" href="img/favicon.png" type="image/x-icon">
+    <!-- box icons -->
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+</head>
+<body>
+    <!-- header -->
+    <header>
+        <!-- nav -->
+        <div class="nav container">
+
+        <!-- logo -->
+        <a href="index.html" class="logo">Stream<span>Ease</span></a>
+
+        <!-- search box -->
+        <div class="search-box">
+            <input type="search" name="" id="search-input" placeholder="Search movie">
+            <i class='bx bx-search'></i>
+        </div>
+
+        <!-- user -->
+        <a href="#" class="user">
+            <img src="user.jpg" alt="" class="user-img">
+        </a>
+
+        <!-- nav-bar -->
+        <div class="navbar">
+            <a href="#home" class="nav-link nav-active">
+                <i class='bx bx-home' ></i>
+                <span class="nav-link-title">Home</span>
+            </a>
+            <a href="#popular" class="nav-link">
+                <i class='bx bxs-hot' ></i>
+                <span class="nav-link-title">Trending</span>
+            </a>
+            <a href="#movies" class="nav-link">
+                <i class='bx bx-compass' ></i>
+                <span class="nav-link-title">Explore</span>
+            </a>
+            <a href="#home" class="nav-link">
+                <i class='bx bx-tv' ></i>
+                <span class="nav-link-title">Movies</span>
+            </a>
+            <a href="#home" class="nav-link">
+                <i class='bx bx-heart' ></i>
+                <span class="nav-link-title">Favorite</span>
+            </a>
+        </div>
+    </div>
+    </header>
+    <div class="main">
+        <div class="sidebar">
+            <div class="profile-pic">
+                <img src="user.jpg" alt="Profile Picture">
+            </div>
+            <div class="profile-name">
+                <h3></h3>
+            </div>
+            <ul>
+                <li class="active"><a href="#" id="accountLink">Account</a></li>
+                <li><a href="#" id="passwordLink">Password</a></li>
+            </ul>
+            <div class="logout">
+                <i class='bx bx-log-out'></i>
+                <span class="logout-title">Logout</span>
+            </div>
+        </div>
+        <div class="main-content" id="accountSettings">
+            <h1>Account Settings</h1>
+            <form>
+                <div class="form-group">
+                    <label for="firstName">First Name</label>
+                    <input type="text" id="firstName" name="firstName" value="Steve">
+                </div>
+                <div class="form-group">
+                    <label for="lastName">Last Name</label>
+                    <input type="text" id="lastName" name="lastName" value="Rogers">
+                </div>
+                <div class="form-group">
+                    <label for="username">Username</label>
+                    <input type="text" id="username" name="username" value="steverogers32">
+                </div>
+                <div class="form-group">
+                    <label for="email">Email</label>
+                    <input type="email" id="email" name="email" value="steverogers32@gmail.com">
+                </div>
+                
+                <div class="form-group">
+                    <button type="button" id="updateButton">Update</button>
+                    <button type="button" id="cancelButton">Cancel</button>
+                </div>
+            </form>
+        </div>
+        <div class="main-content" id="passwordSettings" style="display: none;">
+            <h1>Password Settings</h1>
+            <form id="change-form">
+                <div class="form-group">
+                    <label for="oldPassword">Old password</label>
+                    <input type="password" id="oldPassword" name="oldPassword">
+                </div>
+                <div class="form-group">
+                    <label for="newPassword">New password</label>
+                    <input type="password" id="newPassword" name="newPassword">
+                </div>
+                <div class="form-group">
+                    <label for="confirmPassword">Confirm new password</label>
+                    <input type="password" id="confirmPassword" name="confirmPassword">
+                </div>
+                <div class="form-group">
+                    <button type="submit" id="updatePasswordButton">Update</button>
+                    <button type="button" id="cancelPasswordButton">Cancel</button>
+                </div>
+            </form>
+
+            <div class="notifications"></div>
+        
+            <script src="script.js"></script>
+            <script src="profilejs.js"></script>
+            <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+            <script>
+                function createToast(type, icon, title, text) {
+                    let notifications = document.querySelector('.notifications');
+                    let newToast = document.createElement('div');
+                    newToast.innerHTML = `
+                        <div class="toast ${type}">
+                            <i class="${icon}"></i>
+                            <div class="content">
+                                <div class="title">${title}</div>
+                                <span>${text}</span>
+                            </div>
+                            <i class="close fa-solid fa-xmark" onclick="(this.parentElement).remove()"></i>
+                        </div>`;
+                    notifications.appendChild(newToast);
+                    newToast.timeOut = setTimeout(() => newToast.remove(), 5000);
+                }
+            
+                document.getElementById("change-form").addEventListener("submit", async event => {
+                    event.preventDefault();
+            
+                    const formData = new FormData(event.target);
+                    const formObject = Object.fromEntries(formData.entries());
+            
+                    try {
+                        const result = await axios.patch("http://localhost:8000/users/update-password", formObject, {
+                            withCredentials: true
+                        });
+            
+                        console.log("Password updated successfully!");
+                        createToast('success', 'fa-solid fa-circle-check', 'Success', 'Password updated successfully!');
+                    } catch (err) {
+                        console.error("Error updating password:", err);
+                        createToast('error', 'fa-solid fa-circle-exclamation', 'Error', 'Failed to update password.');
+                    }
+                });
+            </script>
+            
+</body>
+</html>
