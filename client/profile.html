@@ -6,6 +6,7 @@
     <title>StreamEase</title>
     <!-- link css -->
     <link rel="stylesheet" href="css/profilestyle.css">
+    <link rel="stylesheet" href="css/notification.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.3.0/css/all.min.css">
     <!-- favicon -->
     <link rel="shortcut icon" href="img/favicon.png" type="image/x-icon">
@@ -19,7 +20,7 @@
         <div class="nav container">
 
         <!-- logo -->
-        <a href="index.html" class="logo">Stream<span>Ease</span></a>
+        <a href="home-page.html" class="logo">Stream<span>Ease</span></a>
 
         <!-- search box -->
         <div class="search-box">
@@ -34,19 +35,19 @@
 
         <!-- nav-bar -->
         <div class="navbar">
-            <a href="#home" class="nav-link nav-active">
+            <a href="home-page.html" class="nav-link nav-active">
                 <i class='bx bx-home' ></i>
                 <span class="nav-link-title">Home</span>
             </a>
-            <a href="#popular" class="nav-link">
+            <a href="home-page.html#popular" class="nav-link">
                 <i class='bx bxs-hot' ></i>
                 <span class="nav-link-title">Trending</span>
             </a>
-            <a href="#movies" class="nav-link">
+            <a href="home-page.html#movies" class="nav-link">
                 <i class='bx bx-compass' ></i>
                 <span class="nav-link-title">Explore</span>
             </a>
-            <a href="#home" class="nav-link">
+            <a href="home-page.html" class="nav-link">
                 <i class='bx bx-tv' ></i>
                 <span class="nav-link-title">Movies</span>
             </a>
@@ -128,28 +129,28 @@
             <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
             <script>
                 document.addEventListener("DOMContentLoaded", async event => {
-    try {
-        const response = await axios.get("http://localhost:8000/users/userdata", {withCredentials: true});
-        const userData = response.data.result[0];
+                    try {
+                        const response = await axios.get("http://localhost:8000/users/userdata", {withCredentials: true});
+                        const userData = response.data.result[0];
 
-        console.log(userData);
+                        console.log(userData);
 
-        if (userData && userData.username && userData.profile_image_url) {
-            const profilePic = document.querySelector('.profile-pic img');
-            const profileName = document.querySelector('.profile-name h3');
-            const userPic = document.querySelector(".user-img");
+                        if (userData && userData.username && userData.profile_image_url) {
+                            const profilePic = document.querySelector('.profile-pic img');
+                            const profileName = document.querySelector('.profile-name h3');
+                            const userPic = document.querySelector(".user-img");
 
-            userPic.src = userData.profile_image_url
-            profilePic.src = userData.profile_image_url
-            profilePic.alt = 'Profile Picture';
-            profileName.textContent = userData.username
-        } else {
-            console.error('Failed to fetch or incomplete user data.');
-        }
-    } catch (err) {
-        createToast('error', 'fa-solid fa-circle-exclamation', 'Error', 'Failed to fetch user data.');
-    }
-});
+                            userPic.src = userData.profile_image_url
+                            profilePic.src = userData.profile_image_url
+                            profilePic.alt = 'Profile Picture';
+                            profileName.textContent = userData.username
+                        } else {
+                            console.error('Failed to fetch or incomplete user data.');
+                        }
+                    } catch (err) {
+                        createToast('error', 'fa-solid fa-circle-exclamation', 'Error', 'Failed to fetch user data.');
+                    }
+                });
 
                 function createToast(type, icon, title, text) {
                     let notifications = document.querySelector('.notifications');
