@@ -140,8 +140,8 @@ exports.searchMovies = async (request, response) => {
 
 exports.addFavorite = async (request, response) => {
     try{
-        const movieId = request.params.movieId;
-        const userId = request.cookies.uid;
+        const movieId = +request.params.movieId;
+        const userId = +request.cookies.uid;
         console.log("movie: ", movieId, "\nuser: ", userId);
         const SQL = "INSERT INTO favorites (user_id, movie_id) VALUES (?, ?)";
         const result = await executeQuery(SQL, [userId, movieId]);

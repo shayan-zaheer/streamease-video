@@ -86,7 +86,7 @@ header{
 .logo span{
     color: var(--main-color);
 }
-
+ 
 .search-box{
     max-width: 240px;
     width: 100%;
@@ -115,6 +115,26 @@ header{
     color: var(--text-color);
     background: transparent;
     font-size: 0.99rem;
+}
+
+#dropdown {
+    position: absolute;
+    top: 100%;
+    background-color: white;
+    border: 1px solid #ccc;
+    display: none;
+    z-index: 1000;
+}
+
+.dropdown-item {
+    width: 100%;    
+    color: black;
+    padding: 8px 12px;
+    cursor: pointer;
+}
+
+.dropdown-item:hover {
+    background-color: #f0f0f0;
 }
 
 /* user */
@@ -222,6 +242,12 @@ header{
 .watch-btn span{
     font-size: 1rem;
     font-weight:400;
+}
+
+.heart-btn {
+    position: absolute;
+    top: 0.8rem;
+    right: 0.8rem;
 }
 
 /* heading */

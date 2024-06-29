@@ -6,6 +6,10 @@
 		<title>StreamEase</title>
 		<!-- link css -->
 		<link rel="stylesheet" href="css/style.css" />
+        <link rel="stylesheet" href="css/notification.css">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.3.0/css/all.min.css">
+
+
 		<!-- link swiper css -->
 		<link rel="stylesheet" href="css/swiper-bundle.min.css" />
 		<!-- favicon -->
@@ -135,6 +139,8 @@
 			</div>
 		</footer>
 
+        <div class="notifications"></div>
+
 		<!-- Modal -->
 		<!-- link swiper js -->
 		<script src="js/swiper-bundle.min.js"></script>
@@ -231,11 +237,7 @@
 					);
 					const userData = response.data.result[0];
 
-					if (
-						userData &&
-						userData.profile_image_url
-					) {
-
+					if (userData && userData.profile_image_url) {
 						const userPic = document.querySelector(".user-img");
 
 						userPic.src = userData.profile_image_url;
@@ -251,106 +253,89 @@
 			});
 		</script>
 
-		<script>
-			window.addEventListener("DOMContentLoaded", async (event) => {
-				const result = await axios.get(
-					"http://localhost:8000/movies/general",
-					{ withCredentials: true }
-				);
-				const data = result.data;
-				const moviesContainer = document.getElementById("all-movies");
-				data.movies.forEach((movie) => {
-					moviesContainer.innerHTML += `
-                        <div class="movie-box">
-                            <img src="${movie.v_poster}" alt="" class="movie-box-img">
-                            <div class="box-text">
-                                <h2 class="movie-title">${movie.title}</h2>
-                                <span class="movie-type">${movie.genre}</span>
-                                <a href="play-page.html?id=${movie.id}" class="watch-btn play-btn" data-id="${movie.id}">
-                                    <i class='bx bx-right-arrow'></i>
-                                    </a>
-                                    </div>
-                                    </div>`;
-				});
-			});
+        <script>
+            function createToast(type, icon, title, text) {
+                let notifications = document.querySelector('.notifications');
+                let newToast = document.createElement('div');
+                newToast.innerHTML = `
+                    <div class="toast ${type}">
+                        <i class="${icon}"></i>
+                        <div class="content">
+                            <div class="title">${title}</div>
+                            <span>${text}</span>
+                        </div>
+                        <i class="close fa-solid fa-xmark" onclick="(this.parentElement).remove()"></i>
+                    </div>`;
+                notifications.appendChild(newToast);
+                newToast.timeOut = setTimeout(() => newToast.remove(), 5000);
+            }
 
-			window
-				.addEventListener("DOMContentLoaded", async (event) => {
-					const result = await axios.get(
-						"http://localhost:8000/movies/popular/",
-						{ withCredentials: true }
-					);
-					const data = result.data;
-					const popularMoviesContainer =
-						document.getElementById("popular-movies");
-					data.movies.forEach((movie) => {
-						popularMoviesContainer.innerHTML += `
+            window.addEventListener("DOMContentLoaded", async (event) => {
+                try {
+                    const generalResult = await axios.get("http://localhost:8000/movies/general", { withCredentials: true });
+                    const generalData = generalResult.data;
+                    const moviesContainer = document.getElementById("all-movies");
+
+                    generalData.movies.forEach((movie) => {
+                        moviesContainer.insertAdjacentHTML('beforeend', `
+                            <div class="movie-box">
+                                <img src="${movie.v_poster}" alt="" class="movie-box-img">
+                                <div class="box-text">
+                                    <h2 class="movie-title">${movie.title}</h2>
+                                    <span class="movie-type">${movie.genre}</span>
+                                    <a href="play-page.html?id=${movie.id}" class="watch-btn play-btn" data-id="${movie.id}">
+                                        <i class='bx bx-right-arrow'></i>
+                                    </a>
+                                    <a class="watch-btn heart-btn" data-id="${movie.id}">
+                                        <i class='bx bxs-heart' style='color:#ffffff'></i>
+                                    </a>
+                                </div>
+                            </div>
+                        `);
+                    });
+
+                    const popularResult = await axios.get("http://localhost:8000/movies/popular", { withCredentials: true });
+                    const popularData = popularResult.data;
+                    const popularMoviesContainer = document.getElementById("popular-movies");
+
+                    popularData.movies.forEach((movie) => {
+                        popularMoviesContainer.insertAdjacentHTML('beforeend', `
                             <div class="swiper-slide">
-                        <div class="movie-box">
-                            <img src="${movie.v_poster}" alt="" class="movie-box-img">
-                            <div class="box-text">
-                                <h2 class="movie-title">${movie.title}</h2>
-                                <span class="movie-type">${movie.genre}</span>
-                                <a href="play-page.html?id=${movie.id}" class="watch-btn play-btn" data-id="${movie.id}">
-                                    <i class='bx bx-right-arrow'></i>
-                                    </a>
+                                <div class="movie-box">
+                                    <img src="${movie.v_poster}" alt="" class="movie-box-img">
+                                    <div class="box-text">
+                                        <h2 class="movie-title">${movie.title}</h2>
+                                        <span class="movie-type">${movie.genre}</span>
+                                        <a href="play-page.html?id=${movie.id}" class="watch-btn play-btn" data-id="${movie.id}">
+                                            <i class='bx bx-right-arrow'></i>
+                                        </a>
+                                        <a class="watch-btn heart-btn" data-id="${movie.id}">
+                                            <i class='bx bxs-heart' style='color:#ffffff'></i>
+                                        </a >
                                     </div>
-                                    </div>
-                                    </div>
-                                    `;
-					});
-				})
-				.catch((error) =>
-					console.error("Error fetching movies:", error)
-				);
-		</script>
+                                </div>
+                            </div>
+                        `);
+                    });
 
-		<script></script>
-
-		<script>
-			const modal = document.getElementById("linkedin-modal");
-			const closeBtn = document.getElementsByClassName("close")[0];
-			const linkedinLink = document.getElementById("linkedin-link");
-
-			linkedinLink.onclick = function () {
-				modal.style.display = "block";
-			};
-
-			closeBtn.onclick = function () {
-				modal.style.display = "none";
-			};
-		</script>
+                    // Event listener for heart buttons
+                    const heartButtons = document.querySelectorAll(".heart-btn");
+                    heartButtons.forEach((heartButton) => {
+                        heartButton.addEventListener("click", async (event) => {
+                            event.preventDefault();
+                            const movieId = heartButton.getAttribute("data-id");
+                            try {
+                                const response = await axios.get(`http://localhost:8000/movies/add-favorite/${movieId}`, {withCredentials: true});
+                                createToast('success', 'fa-solid fa-circle-check', 'Success', 'Movie added to favorites!');
+                            } catch (err) {
+                                createToast('error', 'fa-solid fa-circle-exclamation', 'Error', 'Failed to add movie to favorites!');
+                            }
+                        });
+                    });
+                } catch (error) {
+                    console.error("Error fetching or rendering movies:", error);
+                }
+            });
+        </script>
 	</body>
 </html>
-
-<!-- <dialog id="linkedin-modal" class="modal">
-        <div class="modal-content">
-            <span class="close">&times;</span>
-            <div class="developer-images">
-                <div class="vertical-developer">
-                    <a href="https://www.linkedin.com/in/simrah-khan-9133b52a4/" target="_blank">
-                        <img src="https://avatars.githubusercontent.com/u/144330305?v=4" alt="Frontend Maestro" class="developer-image">
-                    </a>
-                    <p>Simra Khan</p>
-                    <p>Frontend Developer</p>
-                </div>
-
-                <div class="vertical-developer">
-                    <a href="https://www.linkedin.com/in/shayan-zaheer/" target="_blank">
-                        <img src="https://avatars.githubusercontent.com/u/139066765?v=4" alt="Trying Backend" class="developer-image">
-                    </a>
-                    <p>Shayan Zaheer</p>
-                    <p>Backend Developer</p>
-                    
-                </div>
-
-                <div class="vertical-developer">
-                    <a href="https://www.linkedin.com/in/syed-abdul-ahad-0532422b3/" target="_blank">
-                        <img src="https://avatars.githubusercontent.com/u/144330935?v=4" alt="Frontend Maestro" class="developer-image">
-                    </a>
-                    <p>Syed Abdul Ahad</p>
-                    <p>Frontend Developer</p>
-                </div>
-            </div>
-        </div>
-    </dialog> -->

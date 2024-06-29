@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>StreamEase</title>
+    <!-- link css -->
+    <link rel="stylesheet" href="css/favorite.css">
+    <!-- favicon -->
+    <link rel="shortcut icon" href="favicon.png" type="image/x-icon">
+    <!-- box icons -->
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+</head>
+<body>
+    <!-- header -->
+    <header>
+        <!-- nav -->
+        <div class="nav container">
+
+        <!-- logo -->
+        <a href="home-page.html" class="logo">Stream<span>Ease</span></a>
+
+        <!-- search box -->
+        <div class="search-box">
+            <input type="search" name="" id="search-input" placeholder="Search movie">
+            <i class='bx bx-search'></i>
+        </div>
+
+        <!-- user -->
+        <a href="#" class="user">
+            <img alt="" class="user-img">
+        </a>
+
+        <!-- nav-bar -->
+        <div class="navbar">
+            <a href="#home" class="nav-link nav-active">
+                <i class='bx bx-home' ></i>
+                <span class="nav-link-title">Home</span>
+            </a>
+            <a href="#popular" class="nav-link">
+                <i class='bx bxs-hot' ></i>
+                <span class="nav-link-title">Trending</span>
+            </a>
+            <a href="#movies" class="nav-link">
+                <i class='bx bx-compass' ></i>
+                <span class="nav-link-title">Explore</span>
+            </a>
+            <a href="#home" class="nav-link">
+                <i class='bx bx-tv' ></i>
+                <span class="nav-link-title">Movies</span>
+            </a>
+            <a href="#home" class="nav-link">
+                <i class='bx bx-heart' ></i>
+                <span class="nav-link-title">Favorite</span>
+            </a>
+        </div>
+    </div>
+    </header>
+
+    <section class="movies container" id="movies">
+        <div class="heading">
+            <h2 class="heading-title">Favorites</h2>
+        </div>
+        <!-- movies content -->
+        <div class="movies-content">
+            <!-- movie box 1 -->
+            
+        </div>
+    </section>
+
+    <!-- copyright -->
+    <div class="copyright">
+        <p>&#169; WebWar All rights reserved</p>
+    </div>
+    <script src="favorite-script.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+
+    <script>
+			window.addEventListener("DOMContentLoaded", async (event) => {
+				const result = await axios.get(
+					"http://localhost:8000/movies/general",
+					{ withCredentials: true }
+				);
+				const data = result.data;
+				const moviesContainer = document.querySelector(".movies-content");
+				data.movies.forEach((movie) => {
+					moviesContainer.innerHTML += `
+                        <div class="movie-box">
+                            <img src="${movie.v_poster}" alt="" class="movie-box-img">
+                            <div class="box-text">
+                                <h2 class="movie-title">${movie.title}</h2>
+                                <span class="movie-type">${movie.genre}</span>
+                                <a href="play-page.html?id=${movie.id}" class="watch-btn play-btn" data-id="${movie.id}">
+                                    <i class='bx bx-right-arrow'></i>
+                                    </a>
+                                     <a href="#" class="watch-btn heart-btn">
+                        <i class='bx bxs-heart' style='color:#ffffff '></i>
+                    </a>
+                                    </div>
+                                    </div>`;
+				});
+			});
+    </script>
+</body>
+</html>
+
+            
