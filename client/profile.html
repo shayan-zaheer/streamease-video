@@ -29,7 +29,7 @@
 
         <!-- user -->
         <a href="#" class="user">
-            <img src="user.jpg" alt="" class="user-img">
+            <img alt="" class="user-img">
         </a>
 
         <!-- nav-bar -->
@@ -60,7 +60,7 @@
     <div class="main">
         <div class="sidebar">
             <div class="profile-pic">
-                <img src="user.jpg" alt="Profile Picture">
+                <img alt="Profile Picture">
             </div>
             <div class="profile-name">
                 <h3></h3>
@@ -127,6 +127,30 @@
             <script src="profilejs.js"></script>
             <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
             <script>
+                document.addEventListener("DOMContentLoaded", async event => {
+    try {
+        const response = await axios.get("http://localhost:8000/users/userdata", {withCredentials: true});
+        const userData = response.data.result[0];
+
+        console.log(userData);
+
+        if (userData && userData.username && userData.profile_image_url) {
+            const profilePic = document.querySelector('.profile-pic img');
+            const profileName = document.querySelector('.profile-name h3');
+            const userPic = document.querySelector(".user-img");
+
+            userPic.src = userData.profile_image_url
+            profilePic.src = userData.profile_image_url
+            profilePic.alt = 'Profile Picture';
+            profileName.textContent = userData.username
+        } else {
+            console.error('Failed to fetch or incomplete user data.');
+        }
+    } catch (err) {
+        createToast('error', 'fa-solid fa-circle-exclamation', 'Error', 'Failed to fetch user data.');
+    }
+});
+
                 function createToast(type, icon, title, text) {
                     let notifications = document.querySelector('.notifications');
                     let newToast = document.createElement('div');
@@ -153,8 +177,6 @@
                         const result = await axios.patch("http://localhost:8000/users/update-password", formObject, {
                             withCredentials: true
                         });
-            
-                        console.log("Password updated successfully!");
                         createToast('success', 'fa-solid fa-circle-check', 'Success', 'Password updated successfully!');
                     } catch (err) {
                         console.error("Error updating password:", err);

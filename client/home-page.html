@@ -39,7 +39,7 @@
 
 				<!-- user -->
 				<a href="./profile.html" class="user">
-					<img src="img/user.jpg" alt="" class="user-img" />
+					<img alt="" class="user-img" />
 				</a>
 
 				<!-- nav-bar -->
@@ -208,55 +208,48 @@
 			});
 		</script>
 
-        <script>
-            document.querySelector(".watch-btn").addEventListener("click", async event => {
-                const response = await axios.post('http://localhost:8000/auth/logout', {}, {
-                withCredentials: true,
-            });
-            })
-        </script>
-
-		<!-- <script>
-			document.addEventListener("DOMContentLoaded", () => {
-				const searchInput = document.getElementById("search-input");
-				const dropdown = document.getElementById("dropdown");
-
-				searchInput.addEventListener("input", async () => {
-					const query = searchInput.value.trim();
-                    console.log(query);
-
-					if (query) {
-						try {
-							const response = await axios.get(
-								`http://localhost:8000/movies/search?q=${query}`,
-								{ withCredentials: true }
-							);
-							const movies = response.data;
-                            console.log(movies);
-
-							dropdown.innerHTML = "";
-							movies.movies.forEach((movie) => {
-								const div = document.createElement("div");
-								div.textContent = movie.title;
-								dropdown.appendChild(div);
-							});
-
-							dropdown.style.display = "block";
-						} catch (error) {
-							console.error("Error fetching movies:", error);
+		<script>
+			document
+				.querySelector(".watch-btn")
+				.addEventListener("click", async (event) => {
+					const response = await axios.post(
+						"http://localhost:8000/auth/logout",
+						{},
+						{
+							withCredentials: true,
 						}
-					} else {
-						dropdown.style.display = "none";
-					}
+					);
 				});
+		</script>
 
-				document.addEventListener("click", (event) => {
-					if (!event.target.closest(".search-box")) {
-						dropdown.style.display = "none";
+		<script>
+			document.addEventListener("DOMContentLoaded", async (event) => {
+				try {
+					const response = await axios.get(
+						"http://localhost:8000/users/userdata",
+						{ withCredentials: true }
+					);
+					const userData = response.data.result[0];
+
+					if (
+						userData &&
+						userData.profile_image_url
+					) {
+
+						const userPic = document.querySelector(".user-img");
+
+						userPic.src = userData.profile_image_url;
 					}
-				});
+				} catch (err) {
+					createToast(
+						"error",
+						"fa-solid fa-circle-exclamation",
+						"Error",
+						"Failed to fetch user data."
+					);
+				}
 			});
-		</script> -->
+		</script>
 
 		<script>
 			window.addEventListener("DOMContentLoaded", async (event) => {
@@ -312,9 +305,7 @@
 				);
 		</script>
 
-        <script>
-            
-        </script>
+		<script></script>
 
 		<script>
 			const modal = document.getElementById("linkedin-modal");

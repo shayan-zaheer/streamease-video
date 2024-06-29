@@ -1,18 +1,18 @@
-document.getElementById('updateButton').addEventListener('click', function() {
-    alert('Account updated successfully!');
-});
+// document.getElementById('updateButton').addEventListener('click', function() {
+//     alert('Account updated successfully!');
+// });
 
-document.getElementById('cancelButton').addEventListener('click', function() {
-    alert('Cancelled!');
-});
+// document.getElementById('cancelButton').addEventListener('click', function() {
+//     alert('Cancelled!');
+// });
 
-document.getElementById('updatePasswordButton').addEventListener('click', function() {
-    alert('Password updated successfully!');
-});
+// document.getElementById('updatePasswordButton').addEventListener('click', function() {
+//     alert('Password updated successfully!');
+// });
 
-document.getElementById('cancelPasswordButton').addEventListener('click', function() {
-    alert('Cancelled!');
-});
+// document.getElementById('cancelPasswordButton').addEventListener('click', function() {
+//     alert('Cancelled!');
+// });
 
 
 document.getElementById('accountLink').addEventListener('click', function() {
