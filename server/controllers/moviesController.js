@@ -56,6 +56,25 @@ exports.getPopularMovies = async (request, response) => {
 	}
 };
 
+exports.getMovieData = async (request, response) => {
+    try{
+        const {movieId} = request.params;
+        const SQL = "SELECT * FROM MOVIES WHERE ID = ?";
+        const result = await executeQuery(SQL, [movieId]);
+
+        response.status(200).json({
+            status: "success",
+            result
+        })
+    }
+    catch(err){
+        response.status(500).json({
+            status: "fail",
+            message: err.message
+        })
+    }
+}
+
 exports.getMovieByID = async (request, response) => {
 	try{
 		const id = request.params.id;
@@ -142,6 +161,7 @@ exports.addFavorite = async (request, response) => {
     try{
         const movieId = +request.params.movieId;
         const userId = +request.cookies.uid;
+
         console.log("movie: ", movieId, "\nuser: ", userId);
         const SQL = "INSERT INTO favorites (user_id, movie_id) VALUES (?, ?)";
         const result = await executeQuery(SQL, [userId, movieId]);
@@ -151,6 +171,44 @@ exports.addFavorite = async (request, response) => {
             user: userId,
             favorite: movieId
         });
+    }
+    catch(err){
+        response.status(500).json({
+            status: "fail",
+            message: err.message
+        })
+    }
+};
+
+exports.getFavorites = async (request, response) => {
+    try{
+        const uid = +request.cookies.uid;
+        const SQL = "SELECT movie_id from favorites where user_id = ?";
+        const result = await executeQuery(SQL, [uid]);
+
+        response.status(200).json({
+            status: "success",
+            result
+        })
+    }
+    catch(err){
+        response.status(500).json({
+            status: "fail",
+            message: err.message
+        })
+    }
+};
+
+exports.removeFavorite = async (request, response) => {
+    try{
+        const {movieId} = request.params;
+        const uid = request.cookies.uid;
+        const SQL = "DELETE FROM favorites WHERE user_id = ? AND movie_id = ?";
+        const result = await executeQuery(SQL, [uid, movieId]);
+
+        response.status(204).json({
+            status: "success"
+        })
     }
     catch(err){
         response.status(500).json({
