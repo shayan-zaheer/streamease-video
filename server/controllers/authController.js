@@ -21,14 +21,12 @@ exports.signup = async (request, response) => {
                     error: err.message
                 });
             } else if (err) {
-                return res.status(400).json({
+                return response.status(400).json({
                     status: 'fail',
                     message: 'Error uploading file',
                     error: err.message
                 });
             }
-
-            console.log(request);
 
             const { username, email, password } = request.body;
             const hashedPassword = await bcrypt.hash(password, 10);
@@ -45,7 +43,6 @@ exports.signup = async (request, response) => {
                 message: 'User registered successfully',
                 data: {
                     username,
-                    email,
                     profileImageUrl
                 }
             });

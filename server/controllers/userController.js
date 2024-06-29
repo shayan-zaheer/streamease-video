@@ -1,5 +1,3 @@
-const jwt = require("jsonwebtoken");
-const util = require("util");
 const bcrypt = require("bcrypt");
 const executeQuery = require("../connection/execution");
 
@@ -15,6 +13,23 @@ exports.updateMe = async (request, response) => {
 
     }
 }
+
+exports.getUser = async (request, response) => {
+    try{
+        const uid = request.cookies.uid;
+        const SQL = "SELECT username, profile_image_url from USERS where user_id = ?";
+        const result = await executeQuery(SQL, [uid]);
+
+        response.status(200).json({
+            result
+        })
+    }
+    catch(err){
+
+    }
+}
+
+
 
 exports.updatePassword = async (request, response) => {
     try {

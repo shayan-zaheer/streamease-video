@@ -35,7 +35,7 @@
 
 				<!-- user -->
 				<a href="#" class="user">
-					<img src="img/user.jpg" alt="" class="user-img" />
+					<img alt="" class="user-img" />
 				</a>
 
 				<!-- nav-bar -->
@@ -88,15 +88,33 @@
 		<script src="js/main.js"></script>
         <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
         <script>
-            // const token = localStorage.getItem('token');
-            // if(token){
-            //     axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
-            // }
-            // else{
-            //     window.location.href = "login-signup.html";
-            // }
+			document.addEventListener("DOMContentLoaded", async (event) => {
+				try {
+					const response = await axios.get(
+						"http://localhost:8000/users/userdata",
+						{ withCredentials: true }
+					);
+					const userData = response.data.result[0];
 
-        </script>
+					if (
+						userData &&
+						userData.profile_image_url
+					) {
+
+						const userPic = document.querySelector(".user-img");
+
+						userPic.src = userData.profile_image_url;
+					}
+				} catch (err) {
+					createToast(
+						"error",
+						"fa-solid fa-circle-exclamation",
+						"Error",
+						"Failed to fetch user data."
+					);
+				}
+			});
+		</script>
 
 		<script>
 			document.addEventListener("DOMContentLoaded", (event) => {
