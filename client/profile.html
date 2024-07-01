@@ -181,7 +181,7 @@
                     const formObject = Object.fromEntries(formData.entries());
             
                     try {
-                        const result = await axios.patch("http://localhost:8000/users/update-password", formObject, {
+                        const result = await axios.patch("http://localhost:8000/auth/update-password", formObject, {
                             withCredentials: true
                         });
                         createToast('success', 'fa-solid fa-circle-check', 'Success', 'Password updated successfully!');
@@ -210,6 +210,11 @@
                         console.error("Error updating profile:", err);
                         createToast("error", "fa-solid fa-circle-exclamation", "Error", "Failed to update profile.")
                     }
+                })
+
+                document.querySelector(".logout").addEventListener("click", async event => {
+                        await axios.post("http://localhost:8000/auth/logout", {withCredentials: true});
+                        window.location.href = "login-signup.html";
                 })
             </script>
             

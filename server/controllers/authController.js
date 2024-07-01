@@ -6,6 +6,10 @@ const bcrypt = require("bcrypt");
 const executeQuery = require("../connection/execution");
 const sendEmail = require("../utils/email");
 
+const compareHashPW = async (password, passwordDB) => {
+	return await bcrypt.compare(password, passwordDB);
+};
+
 const signToken = (email) => {
     return jwt.sign({ email }, process.env.SECRET_STR, {
         expiresIn: process.env.LOGIN_EXPIRES,
@@ -185,6 +189,13 @@ exports.authenticate = async (request, response, next) => {
 
 exports.logout = async (request, response) => {
     try {
+        response.clearCookie("uid", {
+            httpOnly: true,
+            maxAge: 7 * 24 * 60 * 60 * 1000,
+            sameSite: "None",
+            secure: true,
+        });
+
         response.clearCookie("token", {
             httpOnly: true,
             maxAge: 7 * 24 * 60 * 60 * 1000,
@@ -240,21 +251,88 @@ exports.forgotPassword = async (request, response) => {
 };
 
 
+exports.updatePassword = async (request, response) => {
+    try {
+        console.log("REQUEST BODY:\n", request.body);
+        const { oldPassword: oldPw, newPassword: newPw, confirmPassword: confirmPw } = request.body;
+        const userId = request.cookies.uid;
+
+        console.log("OldPw:", oldPw, "\nNewPw:", newPw, "\nConfirmPw:", confirmPw)
+        console.log(request.body);  
+
+        console.log(userId);
+
+        const selectSQL = "SELECT password FROM USERS WHERE user_id = ?";
+        const [user] = await executeQuery(selectSQL, [userId]);
+
+        if (!user) {
+            return response.status(400).json({
+                status: "fail",
+                message: "User not found."
+            });
+        }
+
+        const oldHashedPw = user.password;
+        const result = await compareHashPW(oldPw, oldHashedPw);
+
+        if (result) {
+            if (newPw === confirmPw) {
+                const hashedPassword = await bcrypt.hash(newPw, 10);
+                const updateSQL = "UPDATE USERS SET password = ? WHERE user_id = ?";
+                await executeQuery(updateSQL, [hashedPassword, userId]);
+
+                return response.status(200).json({
+                    status: "success",
+                    message: "Password updated successfully!"
+                });
+            } else {
+                return response.status(400).json({
+                    status: "fail",
+                    message: "New Password and Confirm Password are not the same!"
+                });
+            }
+        } else {
+            return response.status(400).json({
+                status: "fail",
+                message: "Old Password is not correct. Try again!"
+            });
+        }
+    } catch (err) {
+        return response.status(500).json({
+            status: "fail",
+            message: err.message
+        });
+    }
+};
+
 exports.resetPassword = async (request, response) => {
     try {
-        const { email, otp, newPassword } = request.body;
+        const { mail, otp, newPassword, confirmPassword} = request.body;
+
+        console.log(request.body);
         
         const SQL = "SELECT otp FROM USERS WHERE email = ?";
-        const [{ otp: storedOtp }] = await executeQuery(SQL, [email]);
+        const [{ otp: storedOtp }] = await executeQuery(SQL, [mail]);
 
-        if (otp === storedOtp) {
-            const updateSQL = "UPDATE USERS SET password = ?, otp = NULL WHERE email = ?";
-            await executeQuery(updateSQL, [newPassword, email]);
+        console.log("DB OTP:\n", storedOtp)
 
-            response.status(200).json({
-                status: "success",
-                message: "Password updated successfully",
-            });
+        if (otp == storedOtp){
+            if(newPassword == confirmPassword){
+                const hashedPassword = await bcrypt.hash(newPassword, 10);
+                const updateSQL = "UPDATE USERS SET password = ?, otp = NULL WHERE email = ?";
+                await executeQuery(updateSQL, [hashedPassword, mail]);
+
+                response.status(200).json({
+                    status: "success",
+                    message: "Password updated successfully",
+                });
+            }
+            else{
+                return response.status(400).json({
+                    status: "fail",
+                    message: "New password and Old password are not the same!"
+                })
+            }
         } else {
             response.status(400).json({
                 status: "fail",
@@ -268,6 +346,7 @@ exports.resetPassword = async (request, response) => {
         });
     }
 };
+
 
 
 // const testToken = request.headers.authorization;
