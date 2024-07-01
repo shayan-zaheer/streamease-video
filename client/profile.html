@@ -64,6 +64,7 @@
                 <img alt="Profile Picture">
             </div>
             <div class="profile-name">
+                <h2></h2>
                 <h3></h3>
             </div>
             <ul>
@@ -77,26 +78,26 @@
         </div>
         <div class="main-content" id="accountSettings">
             <h1>Account Settings</h1>
-            <form>
+            <form id="update-form">
                 <div class="form-group">
                     <label for="firstName">First Name</label>
-                    <input type="text" id="firstName" name="firstName" value="Steve">
+                    <input type="text" id="firstName" name="firstName">
                 </div>
                 <div class="form-group">
                     <label for="lastName">Last Name</label>
-                    <input type="text" id="lastName" name="lastName" value="Rogers">
+                    <input type="text" id="lastName" name="lastName">
                 </div>
                 <div class="form-group">
                     <label for="username">Username</label>
-                    <input type="text" id="username" name="username" value="steverogers32">
+                    <input type="text" id="username" name="username">
                 </div>
                 <div class="form-group">
                     <label for="email">Email</label>
-                    <input type="email" id="email" name="email" value="steverogers32@gmail.com">
+                    <input type="email" id="email" name="email">
                 </div>
                 
                 <div class="form-group">
-                    <button type="button" id="updateButton">Update</button>
+                    <button type="submit" id="updateButton">Update</button>
                     <button type="button" id="cancelButton">Cancel</button>
                 </div>
             </form>
@@ -136,14 +137,24 @@
                         console.log(userData);
 
                         if (userData && userData.username && userData.profile_image_url) {
+                            const formFirstName = document.getElementById("firstName")
+                            const formLastName = document.getElementById("lastName")
+                            const formUserName = document.getElementById("username")
+                            const formEmail = document.getElementById("email");
                             const profilePic = document.querySelector('.profile-pic img');
-                            const profileName = document.querySelector('.profile-name h3');
+                            const userName = document.querySelector('.profile-name h3');
+                            const fullName = document.querySelector(".profile-name h2");
                             const userPic = document.querySelector(".user-img");
 
-                            userPic.src = userData.profile_image_url
-                            profilePic.src = userData.profile_image_url
+                            formFirstName.value = userData.first_name;
+                            formLastName.value = userData.last_name;
+                            formUserName.value = userData.username;
+                            formEmail.value = userData.email;
+                            userPic.src = userData.profile_image_url;
+                            profilePic.src = userData.profile_image_url;
                             profilePic.alt = 'Profile Picture';
-                            profileName.textContent = userData.username
+                            fullName.textContent = `${userData.first_name} ${userData.last_name}`;
+                            userName.textContent = userData.username;
                         } else {
                             console.error('Failed to fetch or incomplete user data.');
                         }
@@ -184,6 +195,25 @@
                         createToast('error', 'fa-solid fa-circle-exclamation', 'Error', 'Failed to update password.');
                     }
                 });
+
+                document.getElementById("update-form").addEventListener("submit", async event => {
+                    event.preventDefault();
+                    const formData = new FormData(event.target);
+                    const formObject = Object.fromEntries(formData.entries());
+
+                    try{
+                        const result = await axios.patch("http://localhost:8000/users/update-profile", formObject, {
+                            withCredentials: true
+                        });
+                        createToast("success", "fa-solid fa-circle-check", "Success", "Profile updated successfully!");
+
+                        window.location.reload();
+                    }
+                    catch(err){
+                        console.error("Error updating profile:", err);
+                        createToast("error", "fa-solid fa-circle-exclamation", "Error", "Failed to update profile.")
+                    }
+                })
             </script>
             
 </body>

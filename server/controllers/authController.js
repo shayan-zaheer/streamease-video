@@ -29,15 +29,14 @@ exports.signup = async (request, response) => {
                 });
             }
 
-            const { username, email, password } = request.body;
+            const { firstname, lastname, username, email, password } = request.body;
             const hashedPassword = await bcrypt.hash(password, 10);
-            console.log(request.file);
             
             const profileImageUrl = request.file ? request.file.path : null;
 
             const SQL =
-                "INSERT INTO USERS(username, email, password, profile_image_url, registration_date) VALUES (?, ?, ?, ?, CURDATE())";
-            await executeQuery(SQL, [username, email, hashedPassword, profileImageUrl]);
+                "INSERT INTO USERS(first_name, last_name, username, email, password, profile_image_url, registration_date) VALUES (?, ?, ?, ?, ?, ?, CURDATE())";
+            await executeQuery(SQL, [firstname, lastname, username, email, hashedPassword, profileImageUrl]);
 
             response.status(201).json({
                 status: 'success',

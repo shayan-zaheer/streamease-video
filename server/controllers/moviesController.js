@@ -183,7 +183,7 @@ exports.addFavorite = async (request, response) => {
 exports.getFavorites = async (request, response) => {
     try{
         const uid = +request.cookies.uid;
-        const SQL = "SELECT movie_id from favorites where user_id = ?";
+        const SQL = "SELECT movie_id FROM favorites WHERE user_id = ?";
         const result = await executeQuery(SQL, [uid]);
 
         response.status(200).json({
