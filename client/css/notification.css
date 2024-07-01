@@ -6,6 +6,7 @@
 	bottom: 5%;
     right: 0;
     flex-direction: column;
+    z-index: 1000000;
 }
 
 .toast{

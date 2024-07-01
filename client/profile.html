@@ -21,13 +21,7 @@
 
         <!-- logo -->
         <a href="home-page.html" class="logo">Stream<span>Ease</span></a>
-
-        <!-- search box -->
-        <div class="search-box">
-            <input type="search" name="" id="search-input" placeholder="Search movie">
-            <i class='bx bx-search'></i>
-        </div>
-
+        
         <!-- user -->
         <a href="#" class="user">
             <img alt="" class="user-img">
@@ -35,7 +29,7 @@
 
         <!-- nav-bar -->
         <div class="navbar">
-            <a href="home-page.html" class="nav-link nav-active">
+            <a href="home-page.html" class="nav-link">
                 <i class='bx bx-home' ></i>
                 <span class="nav-link-title">Home</span>
             </a>
@@ -51,7 +45,7 @@
                 <i class='bx bx-tv' ></i>
                 <span class="nav-link-title">Movies</span>
             </a>
-            <a href="#home" class="nav-link">
+            <a href="favorite.html" class="nav-link">
                 <i class='bx bx-heart' ></i>
                 <span class="nav-link-title">Favorite</span>
             </a>
@@ -76,6 +70,9 @@
                 <span class="logout-title">Logout</span>
             </div>
         </div>
+
+        <div class="notifications"></div>
+
         <div class="main-content" id="accountSettings">
             <h1>Account Settings</h1>
             <form id="update-form">
@@ -122,8 +119,6 @@
                     <button type="button" id="cancelPasswordButton">Cancel</button>
                 </div>
             </form>
-
-            <div class="notifications"></div>
         
             <script src="script.js"></script>
             <script src="profilejs.js"></script>
@@ -207,7 +202,9 @@
                         });
                         createToast("success", "fa-solid fa-circle-check", "Success", "Profile updated successfully!");
 
-                        window.location.reload();
+                        setTimeout(() => {
+                                    window.location.reload();
+                        }, 2000);
                     }
                     catch(err){
                         console.error("Error updating profile:", err);

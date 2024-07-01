@@ -42,7 +42,7 @@
 				</div>
 
 				<!-- user -->
-				<a href="#" class="user">
+				<a href="profile.html" class="user">
 					<img alt="" class="user-img" />
 				</a>
 
@@ -107,13 +107,6 @@
                 notifications.appendChild(newToast);
                 newToast.timeOut = setTimeout(() => newToast.remove(), 5000);
             }
-
-            function removeMovieFromUI(movieId) {
-                const movieBox = document.querySelector(`.movie-box[data-id="${movieId}"]`);
-                if (movieBox) {
-                    movieBox.remove();
-                }
-            }
         
             async function fetchFavoriteMovies() {
                 try {
@@ -176,8 +169,12 @@
                             const movieId = heartButton.getAttribute("data-id");
                             try {
                                 const response = await axios.get(`http://localhost:8000/movies/remove-favorite/${movieId}`, { withCredentials: true });
-                                removeMovieFromUI(movieId);
+
                                 createToast("success", "fa-solid fa-circle-check", "Success", "Movie removed from favorites!");
+
+                                setTimeout(() => {
+                                    window.location.reload();
+                                }, 2000);
                             } catch (err) {
                                 createToast("error", "fa-solid fa-circle-exclamation", "Error", "Failed to remove movie from favorites!");
                             }
