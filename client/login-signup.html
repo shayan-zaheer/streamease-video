@@ -1,0 +1,445 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>StreamEase</title>
+		<!-- favicon -->
+		<link rel="shortcut icon" href="favicon.png" type="image/x-icon" />
+		<link rel="stylesheet" href="styles.css" />
+		<link rel="stylesheet" href="css/notification.css" />
+		<link
+			rel="stylesheet"
+			href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.3.0/css/all.min.css"
+		/>
+	</head>
+
+	<body>
+		<!-- header -->
+		<header>
+			<div class="nav container">
+				<!-- logo -->
+				<a href="login-signup.html" class="logo"
+					>Stream<span>Ease</span></a
+				>
+
+				<button class="btn btn-red-sm">Login</button>
+
+				<!-- user -->
+				<a href="#" class="user">
+					<img alt="" class="user-img" />
+				</a>
+			</div>
+		</header>
+		<div class="main">
+			<div class="box">
+				<div class="hero">
+					<span class="icon-close"
+						><ion-icon name="close-outline"></ion-icon
+					></span>
+					<div class="form-box login">
+						<h2>Login</h2>
+						<form
+							action="#"
+							id="loginForm"
+							method="POST"
+							enctype="multipart/form-data"
+						>
+							<div class="input-box">
+								<span class="icon"
+									><ion-icon name="mail"></ion-icon
+								></span>
+								<input
+									id="eInput"
+									name="email"
+									type="email"
+									required
+								/>
+								<label for="email">Email</label>
+							</div>
+							<div class="input-box">
+								<span class="icon"
+									><ion-icon name="lock-closed"></ion-icon
+								></span>
+								<input
+									id="pInput"
+									name="pass"
+									type="password"
+									required
+								/>
+								<label for="pass">Password</label>
+							</div>
+							<div class="remember-forget">
+								<label>
+									<input type="checkbox" />Remember me
+								</label>
+								<a href="#" id="forgetPasswordLink">Forget Password?</a>
+							</div>
+							<button type="submit" class="boto">Login</button>
+							<div class="login-register">
+								<p>
+									Don't have an account?
+									<a href="#" class="register-link"
+										>Register</a
+									>
+								</p>
+							</div>
+						</form>
+					</div>
+					<div class="form-box register">
+						<h2>Registration</h2>
+						<form
+							action="#"
+							id="signupForm"
+							method="POST"
+							enctype="multipart/form-data"
+						>
+							<div class="input-box">
+								<span class="icon"
+									><ion-icon name="person"></ion-icon
+								></span>
+								<input
+									id="fnameInput"
+									name="fname"
+									type="text"
+									required
+								/>
+								<label for="fname">First Name</label>
+							</div>
+
+							<div class="input-box">
+								<span class="icon"
+									><ion-icon name="person"></ion-icon
+								></span>
+								<input
+									id="lnameInput"
+									name="lname"
+									type="text"
+									required
+								/>
+								<label for="lname">Last Name</label>
+							</div>
+
+							<div class="input-box">
+								<span class="icon"
+									><ion-icon name="person"></ion-icon
+								></span>
+								<input
+									id="usernameInput"
+									name="username"
+									type="text"
+									required
+								/>
+								<label for="username">Username</label>
+							</div>
+
+							<div class="input-box">
+								<span class="icon"
+									><ion-icon name="mail"></ion-icon
+								></span>
+								<input
+									id="emailInput"
+									name="email"
+									type="email"
+									required
+								/>
+								<label for="email">Email</label>
+							</div>
+
+							<div class="input-box">
+								<span class="icon"
+									><ion-icon name="lock-closed"></ion-icon
+								></span>
+								<input
+									id="pwInput"
+									name="pass"
+									type="password"
+									required
+								/>
+								<label for="pass">Password</label>
+							</div>
+
+							<div class="input-box">
+								<span class="icon"
+									><ion-icon name="image"></ion-icon
+								></span>
+								<input
+									id="profileImageInput"
+									name="profileImage"
+									type="file"
+									accept="image/*"
+								/>
+								<label for="profileImage">Profile Image</label>
+							</div>
+
+							<div class="remember-forget">
+								<label>
+									<input type="checkbox" required />I agree to
+									the terms and conditions
+								</label>
+							</div>
+
+							<button type="submit" class="boto">Register</button>
+							<div class="login-register">
+								<p>
+									Already have an account?
+									<a href="#" class="login-link">Login</a>
+								</p>
+							</div>
+						</form>
+					</div>
+					<div class="form-box forgot-password" style="display: none">
+						<h2>Forgot Password</h2>
+						<form
+							action="#"
+							id="forgotPasswordForm"
+							method="POST"
+							enctype="multipart/form-data"
+						>
+							<div class="input-box">
+								<span class="icon"
+									><ion-icon name="mail"></ion-icon
+								></span>
+								<input
+									id="forgotEmailInput"
+									name="email"
+									type="email"
+									required
+								/>
+								<label for="forgotEmail">Email</label>
+							</div>
+							<button type="submit" class="boto">Submit</button>
+							<div class="login-register">
+								<p>
+									Remembered?
+									<a href="#" class="login-link">Login</a>
+								</p>
+                                <p>
+                                    Received OTP?
+                                    <a href="#" class="continue-link">Continue</a>
+                                </p>
+							</div>
+						</form>
+					</div>
+
+                    <div class="form-box otp-form" style="display: none">
+                        <h2>Enter OTP</h2>
+                        <form action="#" id="otpForm" method="POST" enctype="multipart/form-data">
+                            <div class="input-box">
+                                <span class="icon"><ion-icon name="mail"></ion-icon></span>
+                                <input id="otpInput" name="otp" type="text" required />
+                                <label for="otp">OTP</label>
+                            </div>
+                            <div class="input-box">
+                                <span class="icon"><ion-icon name="lock-closed"></ion-icon></span>
+                                <input id="newPasswordInput" name="newPassword" type="password" required />
+                                <label for="newPassword">New Password</label>
+                            </div>
+                            <div class="input-box">
+                                <span class="icon"><ion-icon name="lock-closed"></ion-icon></span>
+                                <input id="confirmPasswordInput" name="confirmPassword" type="password" required />
+                                <label for="confirmPassword">Confirm Password</label>
+                            </div>
+                            <button type="submit" class="boto">Submit</button>
+                            <div class="login-register">
+                                <p>Remembered? <a href="#" class="login-link">Login</a></p>
+                            </div>
+                        </form>
+                    </div>
+
+				</div>
+			</div>
+		</div>
+		<div class="seperation"></div>
+
+		<section class="first">
+			<div class="secimg">
+				<img src="images/mobile.png" alt="" />
+			</div>
+			<div>
+				<span>Download your shows to watch offline</span>
+				<span
+					>Save your favorites easily and always have something to
+					watch.</span
+				>
+			</div>
+		</section>
+		<div class="seperation"></div>
+
+		<section class="first second">
+			<div>
+				<span>Watch everywhere</span>
+				<span
+					>Stream unlimited movies and TV shows on your phone, tablet,
+					laptop, and TV.</span
+				>
+			</div>
+			<div class="secimg">
+				<img src="images/tv.png" alt="" />
+				<video src="videos/video1.mp4" autoplay loop muted></video>
+			</div>
+		</section>
+		<div class="seperation"></div>
+		<!-- copyright -->
+		<div class="copyright">
+			<p>&#169; WebWar All rights reserved</p>
+		</div>
+		<div class="notifications"></div>
+
+		<script src="script.js"></script>
+		<script
+			type="module"
+			src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"
+		></script>
+		<script
+			nomodule
+			src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"
+		></script>
+		<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+
+		<script>
+			function createToast(type, icon, title, text) {
+				let notifications = document.querySelector(".notifications");
+				let newToast = document.createElement("div");
+				newToast.innerHTML = `
+                <div class="toast ${type}">
+                    <i class="${icon}"></i>
+                    <div class="content">
+                        <div class="title">${title}</div>
+                        <span>${text}</span>
+                    </div>
+                    <i class="close fa-solid fa-xmark" onclick="(this.parentElement).remove()"></i>
+                </div>`;
+				notifications.appendChild(newToast);
+				newToast.timeOut = setTimeout(() => newToast.remove(), 5000);
+			}
+
+			document
+				.getElementById("signupForm")
+				.addEventListener("submit", async (event) => {
+					event.preventDefault();
+					const firstname =
+						document.getElementById("fnameInput").value;
+					const lastname =
+						document.getElementById("lnameInput").value;
+					const username =
+						document.getElementById("usernameInput").value;
+					const email = document.getElementById("emailInput").value;
+					const password = document.getElementById("pwInput").value;
+
+					const profileImage =
+						document.getElementById("profileImageInput").files[0];
+
+					console.log(profileImage);
+					try {
+						const response = await axios.post(
+							"http://localhost:8000/auth/signup",
+							{
+								firstname,
+								lastname,
+								username,
+								email,
+								password,
+								profileImage,
+							},
+							{
+								headers: {
+									"Content-Type": "multipart/form-data",
+								},
+							}
+						);
+						const data = response.data;
+						console.log(data);
+						createToast(
+							"success",
+							"fa-solid fa-circle-check",
+							"Success",
+							"User successfully registered!"
+						);
+					} catch (err) {
+						createToast(
+							"error",
+							"fa-solid fa-circle-exclamation",
+							"Error",
+							"Failed to register user. Try again."
+						);
+					}
+				});
+
+			document
+				.getElementById("loginForm")
+				.addEventListener("submit", async (event) => {
+					event.preventDefault();
+					const email = document.getElementById("eInput").value;
+					const password = document.getElementById("pInput").value;
+
+					const result = await axios.post(
+						"http://localhost:8000/auth/login",
+						{ email, password },
+						{ withCredentials: true }
+					);
+					const data = result.data;
+					if (data.status === "success") {
+						window.location.href =
+							"http://127.0.0.1:5500/client/home-page.html";
+					}
+				});
+
+                let mail = "";
+
+			document
+				.getElementById("forgotPasswordForm")
+				.addEventListener("submit", async (event) => {
+					event.preventDefault();
+					const email =
+						document.getElementById("forgotEmailInput").value;
+                        mail = email;
+					try {
+						const response = await axios.patch(
+							"http://localhost:8000/auth/forgot-password",
+							{ email },
+							{ withCredentials: true }
+						);
+						createToast(
+							"success",
+							"fa-solid fa-circle-check",
+							"Success",
+							response.data.message
+						);
+					} catch (err) {
+						createToast(
+							"error",
+							"fa-solid fa-circle-exclamation",
+							"Error",
+							err.message
+						);
+					}
+				});
+
+                document.getElementById("otpForm").addEventListener("submit", async event => {
+                    event.preventDefault();
+                    const otp = document.getElementById("otpInput").value;
+                    const newPassword = document.getElementById("newPasswordInput").value;
+                    const confirmPassword = document.getElementById("confirmPasswordInput").value;
+                    try{
+                        const response = await axios.patch("http://localhost:8000/auth/reset-password", {mail, otp, newPassword, confirmPassword}, {withCredentials: true});
+                        createToast(
+                                "success",
+                                "fa-solid fa-circle-check",
+                                "Success",
+                                response.data.message
+                        );
+                    }
+                    catch(err){
+                        console.log(err);
+                        createToast(
+							"error",
+							"fa-solid fa-circle-exclamation",
+							"Error",
+							err.message
+						);
+                    }
+                })
+		</script>
+	</body>
+</html>

@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>StreamEase</title>
+		<!-- link css -->
+		<link rel="stylesheet" href="css/style.css" />
+		<!-- favicon -->
+		<link rel="shortcut icon" href="img/favicon.png" type="image/x-icon" />
+		<!-- box icons -->
+		<link
+			href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css"
+			rel="stylesheet"
+		/>
+	</head>
+	<body>
+		<!-- header -->
+		<header>
+			<!-- nav -->
+			<div class="nav container">
+				<!-- logo -->
+				<a href="home-page.html" class="logo">Stream<span>Ease</span></a>
+
+				<!-- search box -->
+				<div class="search-box">
+					<input
+						type="search"
+						id="search-input"
+						placeholder="Search movie"
+					/>
+					<i class="bx bx-search"></i>
+					<div id="dropdown" class="dropdown-content"></div>
+				</div>
+
+				<!-- user -->
+				<a href="profile.html" class="user">
+					<img alt="" class="user-img" />
+				</a>
+
+				<!-- nav-bar -->
+				<div class="navbar">
+					<a href="home-page.html" class="nav-link nav-active">
+						<i class="bx bx-home"></i>
+						<span class="nav-link-title">Home</span>
+					</a>
+					<a href="home-page.html#popular" class="nav-link">
+						<i class="bx bxs-hot"></i>
+						<span class="nav-link-title">Trending</span>
+					</a>
+					<a href="home-page.html#movies" class="nav-link">
+						<i class="bx bx-compass"></i>
+						<span class="nav-link-title">Explore</span>
+					</a>
+					<a href="home-page.html" class="nav-link">
+						<i class="bx bx-tv"></i>
+						<span class="nav-link-title">Movies</span>
+					</a>
+					<a href="favorite.html" class="nav-link">
+						<i class="bx bx-heart"></i>
+						<span class="nav-link-title">Favorite</span>
+					</a>
+				</div>
+			</div>
+		</header>
+
+		<!-- play movie container -->
+		<div class="play-container container">
+			<!-- play image -->
+		</div>
+
+		<!-- About -->
+		<div class="about-movie container"></div>
+
+		<!-- copyright -->
+		<footer class="copyright">
+			<div>
+				<a href="#" id="linkedin-link"
+					><i class="bx bxl-linkedin"></i
+				></a>
+			</div>
+		</footer>
+
+		<!-- link swiper js -->
+		<script src="js/swiper-bundle.min.js"></script>
+
+		<!-- link js -->
+		<script src="js/main.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+        <script>
+			document.addEventListener("DOMContentLoaded", async (event) => {
+				try {
+					const response = await axios.get(
+						"http://localhost:8000/users/userdata",
+						{ withCredentials: true }
+					);
+					const userData = response.data.result[0];
+
+					if (
+						userData &&
+						userData.profile_image_url
+					) {
+
+						const userPic = document.querySelector(".user-img");
+
+						userPic.src = userData.profile_image_url;
+					}
+				} catch (err) {
+					createToast(
+						"error",
+						"fa-solid fa-circle-exclamation",
+						"Error",
+						"Failed to fetch user data."
+					);
+				}
+			});
+		</script>
+
+		<script>
+			document.addEventListener("DOMContentLoaded", (event) => {
+				const urlParams = new URLSearchParams(window.location.search);
+				const movieId = urlParams.get("id");
+
+				if (movieId) {
+					axios.get(`http://localhost:8000/movies/${movieId}`)
+						.then((response) => response.data)
+						.then((data) => {
+							console.log(data.movie);
+							const movieDetails =
+								document.querySelector(".play-container");
+							movieDetails.innerHTML = `
+                            <img src=${data.movie.h_poster} alt="" class="play-img">
+        <!-- play text -->
+        <div class="play-text">
+            <h2>${data.movie.title}</h2>
+            <!-- ratings -->
+            <div class="raiting">
+                <i class='bx bxs-star'></i> ${data.movie.vote_average}
+            </div>
+            <!-- tags -->
+            <div class="tags">
+                <span>${data.movie.genre}</span>
+            </div>  
+        </div>
+        <!-- play btn -->
+        <i class='bx bx-right-arrow play-movie'></i>
+
+        <!-- video container -->
+        <div class="video-container">
+            <!-- video box -->
+            <div class="video-box">
+                <video id="myvideo" src=${data.movie.url} controls controlsList="nodownload"></video>
+                <!-- close video icon -->
+                <i class='bx bx-x close-video'></i>
+            </div>
+        </div>`;
+
+							const aboutMovie =
+								document.querySelector(".about-movie");
+							aboutMovie.innerHTML = `
+        <h2>${data.movie.title}</h2>
+        <p>${data.movie.description}</p>
+        <!-- Movie cast -->
+        <h2 class="cast-heading">${data.movie.title}'s Cast</h2>
+        <div id="cast">
+            
+        </div>
+        `;
+
+        const apiKey = "bf0036eb9e46fbfcccfb653c83bc63cd";
+			const movieName = data.movie.title;
+
+			const searchMovie = async (movieName) => {
+				const searchUrl = `https://api.themoviedb.org/3/search/movie?api_key=${apiKey}&query=${encodeURIComponent(
+					movieName
+				)}`;
+				const response = await fetch(searchUrl);
+				const searchResults = await response.json();
+				if (searchResults.results && searchResults.results.length > 0) {
+					return searchResults.results[0].id;
+				} else {
+					throw new Error("Movie not found");
+				}
+			};
+
+			const getMovieCredits = async (movieId) => {
+				const creditsUrl = `https://api.themoviedb.org/3/movie/${movieId}/credits?api_key=${apiKey}`;
+				const response = await fetch(creditsUrl);
+				const credits = await response.json();
+				return credits.cast;
+			};
+
+			const fetchMovieCast = async (movieName) => {
+				const movieId = await searchMovie(movieName);
+				const cast = await getMovieCredits(movieId);
+				const castBox = document.getElementById("cast");
+				cast.forEach((member) => {
+                    if(member.profile_path == null){
+                        return;
+                    }
+					castBox.innerHTML += `
+            <div class="cast-box">
+                <img src="https://image.tmdb.org/t/p/original${member.profile_path}" class="cast-img">
+                <span class="cast-title">${member.original_name}</span>
+            </div>
+            `;
+				});
+			};
+
+			fetchMovieCast(movieName);
+
+							const playButton =
+								document.querySelector(".play-movie");
+							const videoContainer =
+								document.querySelector(".video-container");
+							const closeVideoButton =
+								document.querySelector(".close-video");
+							const video = document.querySelector("#myvideo");
+
+							playButton.addEventListener("click", () => {
+								videoContainer.style.display = "flex";
+							});
+
+							closeVideoButton.addEventListener("click", () => {
+								video.pause();
+								videoContainer.style.display = "none";
+							});
+						})
+						.catch((error) =>
+							console.error(
+								"Error fetching movie details:",
+								error
+							)
+						);
+				} else {
+					console.error("No movie ID found in URL");
+				}
+
+
+			});
+		</script>
+
+<script>
+    document.addEventListener("DOMContentLoaded", () => {
+        const searchInput = document.getElementById("search-input");
+        const dropdown = document.getElementById("dropdown");
+
+        let debounceTimeout;
+
+        const debounce = (func, delay) => {
+            return (...args) => {
+                clearTimeout(debounceTimeout);
+                debounceTimeout = setTimeout(() => {
+                    func(...args);
+                }, delay);
+            };
+        };
+
+        const fetchMovies = async (query) => {
+            try {
+                const response = await axios.get(
+                    `http://localhost:8000/movies/search?q=${query}`,
+                    { withCredentials: true }
+                );
+                const movies = response.data.movies;
+
+                dropdown.innerHTML = "";
+                movies.forEach((movie) => {
+                    const div = document.createElement("div");
+                    div.textContent = movie.title;
+                    div.classList.add("dropdown-item");
+                    movieID = movie.id;
+                    div.addEventListener("click", () =>
+                        handleDropdownItem(movie)
+                    );
+                    dropdown.appendChild(div);
+                });
+
+                dropdown.style.display = "block";
+
+                function handleDropdownItem(movie) {
+                    window.location.href = `http://127.0.0.1:5500/client/play-page.html?id=${movieID}`;
+                }
+            } catch (error) {
+                console.error("Error fetching movies:", error);
+            }
+        };
+
+        const handleSearchInput = debounce(async () => {
+            const query = searchInput.value.trim();
+
+            if (query) {
+                await fetchMovies(query);
+            } else {
+                dropdown.style.display = "none";
+            }
+        }, 300);
+
+        searchInput.addEventListener("input", handleSearchInput);
+
+        document.addEventListener("click", (event) => {
+            if (!event.target.closest(".search-box")) {
+                dropdown.style.display = "none";
+            }
+        });
+    });
+</script>
+
+	</body>
+</html>

@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>StreamEase</title>
+		<!-- link css -->
+		<link rel="stylesheet" href="css/style.css" />
+        <link rel="stylesheet" href="css/notification.css">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.3.0/css/all.min.css">
+
+
+		<!-- link swiper css -->
+		<link rel="stylesheet" href="css/swiper-bundle.min.css" />
+		<!-- favicon -->
+		<link rel="shortcut icon" href="img/favicon.png" type="image/x-icon" />
+		<!-- box icons -->
+		<link
+			href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css"
+			rel="stylesheet"
+		/>
+	</head>
+	<body>
+		<!-- header -->
+		<header>
+			<!-- nav -->
+			<div class="nav container">
+				<!-- logo -->
+				<a href="home-page.html" class="logo"
+					>Stream<span>Ease</span></a
+				>
+
+				<!-- search box -->
+				<div class="search-box">
+					<input
+						type="search"
+						id="search-input"
+						placeholder="Search movie"
+					/>
+					<i class="bx bx-search"></i>
+					<div id="dropdown" class="dropdown-content"></div>
+				</div>
+
+				<!-- user -->
+				<a href="profile.html" class="user">
+					<img alt="" class="user-img" />
+				</a>
+
+				<!-- nav-bar -->
+				<div class="navbar">
+					<a href="#home" class="nav-link nav-active">
+						<i class="bx bx-home"></i>
+						<span class="nav-link-title">Home</span>
+					</a>
+					<a href="#popular" class="nav-link">
+						<i class="bx bxs-hot"></i>
+						<span class="nav-link-title">Trending</span>
+					</a>
+					<a href="#movies" class="nav-link">
+						<i class="bx bx-compass"></i>
+						<span class="nav-link-title">Explore</span>
+					</a>
+					<a href="#home" class="nav-link">
+						<i class="bx bx-tv"></i>
+						<span class="nav-link-title">Movies</span>
+					</a>
+					<a href="favorite.html" class="nav-link">
+						<i class="bx bx-heart"></i>
+						<span class="nav-link-title">Favorite</span>
+					</a>
+				</div>
+			</div>
+		</header>
+
+		<!-- home -->
+		<section class="home container" id="home">
+			<!-- home-img -->
+			<img src="img/background.jpg" alt="" class="home-img" />
+			<!-- home-text -->
+			<div class="home-text">
+				<h1 class="home-title">
+					Hitman's Wife's <br />
+					Bodyguard
+				</h1>
+				<p>Releasing on 10th April</p>
+				<a class="watch-btn">
+					<i class="bx bx-right-arrow"></i>
+					<span>Watch the Trailer</span>
+				</a>
+			</div>
+		</section>
+		<!-- home end -->
+
+		<!-- Popular Section Start-->
+		<section class="popular container" id="popular">
+			<!-- heading -->
+			<div class="heading">
+				<h2 class="heading-title">Popular Movies</h2>
+				<!-- swiper btn -->
+				<div class="swiper-btn">
+					<div class="swiper-button-prev"></div>
+					<div class="swiper-button-next"></div>
+				</div>
+			</div>
+			<!-- content -->
+			<div class="popular-content swiper">
+				<div class="swiper-wrapper" id="popular-movies">
+					<!-- Popular movies will be dynamically added here -->
+				</div>
+			</div>
+		</section>
+		<!-- Popular Section End-->
+
+		<!-- Movies section Start -->
+		<section class="movies container" id="movies">
+			<div class="heading">
+				<h2 class="heading-title">Movies and Shows</h2>
+			</div>
+
+			<!-- movies content -->
+			<div class="movies-content" id="all-movies">
+				<!-- All movies will be dynamically added here -->
+			</div>
+		</section>
+		<!-- Movies section End -->
+
+		<!-- next page -->
+		<div class="next-page">
+			<a href="#" class="next-btn">Next Page</a>
+		</div>
+
+		<!-- copyright -->
+		<!-- copyright -->
+		<footer class="copyright">
+			<div>
+				<a href="#" id="linkedin-link"
+					><i class="bx bxl-linkedin"></i
+				></a>
+			</div>
+		</footer>
+
+        <div class="notifications"></div>
+
+		<!-- Modal -->
+		<!-- link swiper js -->
+		<script src="js/swiper-bundle.min.js"></script>
+		<!-- link js -->
+		<script src="js/main.js"></script>
+		<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+
+		<script>
+			document.addEventListener("DOMContentLoaded", () => {
+				const searchInput = document.getElementById("search-input");
+				const dropdown = document.getElementById("dropdown");
+
+				let debounceTimeout;
+
+				const debounce = (func, delay) => {
+					return (...args) => {
+						clearTimeout(debounceTimeout);
+						debounceTimeout = setTimeout(() => {
+							func(...args);
+						}, delay);
+					};
+				};
+
+				const fetchMovies = async (query) => {
+					try {
+						const response = await axios.get(
+							`http://localhost:8000/movies/search?q=${query}`,
+							{ withCredentials: true }
+						);
+						const movies = response.data.movies;
+
+						dropdown.innerHTML = "";
+						movies.forEach((movie) => {
+							const div = document.createElement("div");
+							div.textContent = movie.title;
+							div.classList.add("dropdown-item");
+							movieID = movie.id;
+							div.addEventListener("click", () =>
+								handleDropdownItem(movie)
+							);
+							dropdown.appendChild(div);
+						});
+
+						dropdown.style.display = "block";
+
+						function handleDropdownItem(movie) {
+							window.location.href = `http://127.0.0.1:5500/client/play-page.html?id=${movieID}`;
+						}
+					} catch (error) {
+						console.error("Error fetching movies:", error);
+					}
+				};
+
+				const handleSearchInput = debounce(async () => {
+					const query = searchInput.value.trim();
+
+					if (query) {
+						await fetchMovies(query);
+					} else {
+						dropdown.style.display = "none";
+					}
+				}, 300);
+
+				searchInput.addEventListener("input", handleSearchInput);
+
+				document.addEventListener("click", (event) => {
+					if (!event.target.closest(".search-box")) {
+						dropdown.style.display = "none";
+					}
+				});
+			});
+		</script>
+
+		<script>
+			document
+				.querySelector(".watch-btn")
+				.addEventListener("click", async (event) => {
+					const response = await axios.post(
+						"http://localhost:8000/auth/logout",
+						{},
+						{
+							withCredentials: true,
+						}
+					);
+				});
+		</script>
+
+		<script>
+			document.addEventListener("DOMContentLoaded", async (event) => {
+				try {
+					const response = await axios.get(
+						"http://localhost:8000/users/userdata",
+						{ withCredentials: true }
+					);
+					const userData = response.data.result[0];
+
+					if (userData && userData.profile_image_url) {
+						const userPic = document.querySelector(".user-img");
+
+						userPic.src = userData.profile_image_url;
+					}
+				} catch (err) {
+					createToast(
+						"error",
+						"fa-solid fa-circle-exclamation",
+						"Error",
+						"Failed to fetch user data."
+					);
+				}
+			});
+		</script>
+
+        <script>
+            function createToast(type, icon, title, text) {
+                let notifications = document.querySelector('.notifications');
+                let newToast = document.createElement('div');
+                newToast.innerHTML = `
+                    <div class="toast ${type}">
+                        <i class="${icon}"></i>
+                        <div class="content">
+                            <div class="title">${title}</div>
+                            <span>${text}</span>
+                        </div>
+                        <i class="close fa-solid fa-xmark" onclick="(this.parentElement).remove()"></i>
+                    </div>`;
+                notifications.appendChild(newToast);
+                newToast.timeOut = setTimeout(() => newToast.remove(), 5000);
+            }
+
+            window.addEventListener("DOMContentLoaded", async (event) => {
+                try {
+                    const generalResult = await axios.get("http://localhost:8000/movies/general", { withCredentials: true });
+                    const generalData = generalResult.data;
+                    const moviesContainer = document.getElementById("all-movies");
+
+                    generalData.movies.forEach((movie) => {
+                        moviesContainer.insertAdjacentHTML('beforeend', `
+                            <div class="movie-box">
+                                <img src="${movie.v_poster}" alt="" class="movie-box-img">
+                                <div class="box-text">
+                                    <h2 class="movie-title">${movie.title}</h2>
+                                    <span class="movie-type">${movie.genre}</span>
+                                    <a href="play-page.html?id=${movie.id}" class="watch-btn play-btn" data-id="${movie.id}">
+                                        <i class='bx bx-right-arrow'></i>
+                                    </a>
+                                    <a class="watch-btn heart-btn" data-id="${movie.id}">
+                                        <i class='bx bxs-heart' style='color:#ffffff'></i>
+                                    </a>
+                                </div>
+                            </div>
+                        `);
+                    });
+
+                    const popularResult = await axios.get("http://localhost:8000/movies/popular", { withCredentials: true });
+                    const popularData = popularResult.data;
+                    const popularMoviesContainer = document.getElementById("popular-movies");
+
+                    popularData.movies.forEach((movie) => {
+                        popularMoviesContainer.insertAdjacentHTML('beforeend', `
+                            <div class="swiper-slide">
+                                <div class="movie-box">
+                                    <img src="${movie.v_poster}" alt="" class="movie-box-img">
+                                    <div class="box-text">
+                                        <h2 class="movie-title">${movie.title}</h2>
+                                        <span class="movie-type">${movie.genre}</span>
+                                        <a href="play-page.html?id=${movie.id}" class="watch-btn play-btn" data-id="${movie.id}">
+                                            <i class='bx bx-right-arrow'></i>
+                                        </a>
+                                        <a class="watch-btn heart-btn" data-id="${movie.id}">
+                                            <i class='bx bxs-heart' style='color:#ffffff'></i>
+                                        </a >
+                                    </div>
+                                </div>
+                            </div>
+                        `);
+                    });
+
+                    // Event listener for heart buttons
+                    const heartButtons = document.querySelectorAll(".heart-btn");
+                    heartButtons.forEach((heartButton) => {
+                        heartButton.addEventListener("click", async (event) => {
+                            event.preventDefault();
+                            const movieId = heartButton.getAttribute("data-id");
+                            try {
+                                const response = await axios.get(`http://localhost:8000/movies/add-favorite/${movieId}`, {withCredentials: true});
+                                createToast('success', 'fa-solid fa-circle-check', 'Success', 'Movie added to favorites!');
+                            } catch (err) {
+                                createToast('error', 'fa-solid fa-circle-exclamation', 'Error', 'Failed to add movie to favorites!');
+                            }
+                        });
+                    });
+                } catch (error) {
+                    console.error("Error fetching or rendering movies:", error);
+                }
+            });
+        </script>
+	</body>
+</html>

@@ -4,8 +4,8 @@ const authController = require("../controllers/authController");
 const router = express.Router();
 
 router.route("/search").get(authController.checkToken, moviesController.searchMovies);
-router.route("/popular").get(moviesController.getPopularMovies);
-router.route("/general").get(moviesController.getAllMovies);
+router.route("/popular").get(authController.checkToken, moviesController.getPopularMovies);
+router.route("/general").get(authController.checkToken, moviesController.getAllMovies);
 router.route("/favorites").get(authController.checkToken, moviesController.getFavorites);
 router.route("/moviedata/:movieId").get(authController.checkToken, moviesController.getMovieData);
 router.route("/remove-favorite/:movieId").get(authController.checkToken, moviesController.removeFavorite);

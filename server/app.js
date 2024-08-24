@@ -9,7 +9,7 @@ const morgan = require("morgan");
 const cookieParser = require("cookie-parser");
 
 app.use(cors({
-    origin: 'http://localhost:5173',
+    origin: 'http://127.0.0.1:5500',
     credentials: true
 }));
 
